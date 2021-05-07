@@ -1,13 +1,16 @@
+DEBUG = True
+
 import json
 import os
-from bmt import Toolkit
 
 from trapi_model.data import trapi_schemas
 from trapi_model.data import biolink_schemas
 from trapi_model.exceptions import UnsupportedBiolinkVersion, UnknownBiolinkEntity
 
 # Prelink Biolink Model Toolkits
-TOOLKITS = {'latest': Toolkit()}
+if not DEBUG:
+    from bmt import Toolkit
+    TOOLKITS = {'latest': Toolkit()}
 '''
 TOOLKITS = {}
 BMT_SCHEMA_DIR = os.path.abspath(os.path.dirname(biolink_schemas.__file__))
@@ -21,14 +24,25 @@ for schema in os.listdir(BMT_SCHEMA_DIR):
 '''
 
 class BiolinkEntity:
-    def __init__(self, name, biolink_version=None):
+    def __init__(self, name, biolink_version=None, is_slot=False):
         self.passed_name = name
-        self.bmt = self.get_toolkit(biolink_version)
-        self.element = self.bmt.get_element(name)
-        if self.element is None:
-            raise UnknownBiolinkEntity(name)
+        self.biolink_version = biolink_version
+        self.is_slot = is_slot
+        if not DEBUG:
+            self.bmt = self.get_toolkit(biolink_version)
+            self.element = self.bmt.get_element(name)
+            if self.element is None:
+                print("NO such thing as {}".format(name))
+                raise UnknownBiolinkEntity(name)
 
-    def get_curie(self):
+    def get_curie(self, is_slot=False):
+        if DEBUG:
+            if 'biolink:' in self.passed_name:
+                return self.passed_name
+            else:
+                if is_slot or self.is_slot:
+                    return 'biolink:' + self.passed_name.replace(' ', '_')
+                return 'biolink:' + ''.join(x for x in self.passed_name.title() if not x.isspace())
         try:
             _curie = self.element.class_uri
         except AttributeError:
@@ -65,4 +79,4 @@ class TrapiBaseClass:
                 json.dump(self.to_dict(), json_file)
 
     def __str__(self):
-        return json.dumps(self.to_dict())
+        return json.dumps(self.to_dict(), indent=2)

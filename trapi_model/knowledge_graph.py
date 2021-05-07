@@ -12,7 +12,6 @@ from trapi_model.base import TrapiBaseClass, BiolinkEntity
 
 from reasoner_validator import validate_Edge_1_0, validate_Edge_1_1, \
 validate_Node_1_0, validate_Node_1_1, validate_KnowledgeGraph_1_0, validate_KnowledgeGraph_1_1
-from bmt import Toolkit
 
 
 class Attribute(TrapiBaseClass):
@@ -58,22 +57,31 @@ class Attribute(TrapiBaseClass):
         else:
             raise UnsupportedTrapiVersion(self.trapi_version)
 
-    def load(self, attribute_info, name=None):
-        if self.trapi_version == '1.0':
-            self.attribute_type_id = attribute_info.pop("type")
-            self.value = attribute_info.pop("value")
-            self.original_attribute_name = attribute_info.pop("name", None)
-            self.attribute_source = attribute_info.pop("source", None)
-            self.value_url = attribute_info.pop("url", None)
-        elif self.trapi_version == '1.1':
-            self.attribute_type_id = attribute_info.pop("attribute_type_id")
-            self.value = attribute_info.pop("value")
-            self.value_type_id = attribute_info.pop("value_type_id", None)
-            self.original_attribute_name = attribute_info.pop("original_attribute_name", None)
-            self.attribute_source = attribute_info.pop("attribute_source", None)
-            self.value_url = attribute_info.pop("value_url", None)
-            self.description = attribute_info("description", None)
-        return self
+    @staticmethod
+    def load(trapi_version, biolink_version, attribute_info, name=None):
+        if trapi_version == '1.0':
+            attribute = Attribute(
+                    trapi_version,
+                    biolink_version,
+                    attribute_type_id=attribute_info.pop("type"),
+                    value=attribute_info.pop("value"),
+                    original_attribute_name=attribute_info.pop("name", None),
+                    attribute_source=attribute_info.pop("source", None),
+                    value_url=attribute_info.pop("url", None),
+                    )
+        elif trapi_version == '1.1':
+            attribute = Attribute(
+                    trapi_version,
+                    biolink_version,
+                    attribute_type_id=attribute_info.pop("attribute_type_id"),
+                    value=attribute_info.pop("value"),
+                    value_type_id=attribute_info.pop("value_type_id", None),
+                    original_attribute_name=attribute_info.pop("original_attribute_name", None),
+                    attribute_source=attribute_info.pop("attribute_source", None),
+                    value_url=attribute_info.pop("value_url", None),
+                    description=attribute_info("description", None),
+                    )
+        return attribute
 
 class KNode(TrapiBaseClass):
     def __init__(self,
@@ -84,8 +92,13 @@ class KNode(TrapiBaseClass):
             attributes = None,
             ):
         self.name = name 
+        if type(categories) is not list and categories is not None:
+            categories = [categories]
         self.categories = categories
-        self.attributes = attributes
+        if attributes is None:
+            self.attributes = []
+        else:
+            self.attributes = attributes
         super().__init__(trapi_version, biolink_version)
 
         valid, message = self.validate()
@@ -93,19 +106,19 @@ class KNode(TrapiBaseClass):
             raise InvalidTrapiComponent(trapi_version, 'KNode', message)
 
     def to_dict(self):
+        categories = self.categories
+        if categories is not None:
+            categories = [category.get_curie() for category in categories]
         if self.trapi_version == '1.0':
             _dict = {
                         "name": self.name,
-                        "category": self.categories.get_curie(),
+                        "category": categories,
                         "attributes": [],
                     }
         elif self.trapi_version == '1.1':
-            categories = self.categories
-            if type(categories) is not list and categories is not None:
-                categories = [categories]
             _dict = {
                         "name": self.name,
-                        "categories": [category.get_curie() for category in categories],
+                        "categories": categories,
                         "attributes": []
                     }
         else:
@@ -114,27 +127,48 @@ class KNode(TrapiBaseClass):
             for attribute in self.attributes:
                 _dict["attributes"].append(attribute.to_dict())
         return _dict
+    
+    def set_categories(self, categories):
+        if type(categories) is str:
+            self.categories = [BiolinkEntity(categories)]
+        elif type(categories) is BiolinkEntity:
+            self.categories = [categories]
+        else:
+            _categories = []
+            for category in categories:
+                if type(category) is str:
+                    _categories.append(BiolinkEntity(category))
+                elif type(category) is BiolinkEntity:
+                    _categories.append(category)
+            self.categories = _categories
 
-    def load(self, knode_info):
-        if self.trapi_version == '1.0':
-            self.categories = knode_info.pop("category", None)
-        elif self.trapi_version == '1.1':
-            self.categories = knode_info.pop("categories", None)
-        self.name = knode_info.pop("name", None)
+    @staticmethod
+    def load(trapi_version, biolink_version, knode_info):
+        knode = KNode(trapi_version, biolink_version)
+        if trapi_version == '1.0':
+            categories = knode_info.pop("category", None)
+            if categories is not None:
+                knode.set_categories(categories)
+        elif trapi_version == '1.1':
+            categories = knode_info.pop("categories", None)
+            if categories is not None:
+                knode.set_categories(categories)
+        knode.name = knode_info.pop("name", None)
         attributes = knode_info.pop("attributes", None)
         if attributes is not None:
             for attribute_info in attributes:
-                _attribute = Attribute(
-                        trapi_version=self.trapi_version, 
-                        biolink_version=self.biolink_version,
+                knode.attributes.append(
+                        Attribute.load(
+                            trapi_version, 
+                            biolink_version,
+                            attribute_info,
+                            )
                         )
-                self.attributes.append(_attribute.load(attribute_info))
-        valid, message = self.validate()
+        valid, message = knode.validate()
         if valid:
-            return self
+            return knode
         else:
-            raise InvalidTrapiComponent(self.trapi_version, 'KNode', message)
-        return self
+            raise InvalidTrapiComponent(trapi_version, 'KNode', message)
 
     def add_attribute(self, 
             attribute_type_id,
@@ -162,7 +196,7 @@ class KNode(TrapiBaseClass):
                 )
         valid, message = self.validate()
         if not valid:
-            raise InvalidTrapiComponent(trapi_version, 'KNode', message)
+            raise InvalidTrapiComponent(self.trapi_version, 'KNode', message)
 
     def validate(self):
         _dict = self.to_dict()
@@ -191,7 +225,10 @@ class KEdge(TrapiBaseClass):
         self.object = k_object
         self.predicate = predicate
         self.relation = relation
-        self.attributes = attributes
+        if attributes is None:
+            self.attributes = []
+        else:
+            self.attributes = attributes
         super().__init__(trapi_version, biolink_version)
         
         valid, message = self.validate()
@@ -200,8 +237,11 @@ class KEdge(TrapiBaseClass):
 
     def to_dict(self):
         if self.trapi_version == '1.0' or self.trapi_version == '1.1':
+            predicate = self.predicate
+            if predicate is not None:
+                predicate = predicate.get_curie(is_slot=True)
             _dict = {
-                    "predicate": self.predicate.get_curie(),
+                    "predicate": predicate,
                     "relation": self.relation,
                     "subject": self.subject,
                     "object": self.object,
@@ -214,25 +254,35 @@ class KEdge(TrapiBaseClass):
         else:
             raise UnsupportedTrapiVersion(self.trapi_version)
 
-    def load(self, kedge_info):
-        self.subject = kedge_info.pop("subject")
-        self.object = kedge_info.pop("object")
-        self.predicate = kedge_info.pop("predicate", None)
-        self.relation = kedge_info.pop("relation", None)
+    @staticmethod
+    def load(trapi_version, biolink_version, kedge_info):
+        kedge = KEdge(
+                trapi_version,
+                biolink_version,
+                kedge_info.pop("subject"),
+                kedge_info.pop("object"),
+                )
+        predicate = kedge_info.pop("predicate", None)
+        if predicate is not None:
+            kedge.predicate = BiolinkEntity(predicate, is_slot=True)
+        kedge.relation = kedge_info.pop("relation", None)
         attributes = kedge_info.pop("attributes", None)
         if attributes is not None:
             for attribute_info in attributes:
-                _attribute = Attribute(
-                        trapi_version=self.trapi_version,
-                        biolink_version=self.biolink_version,
+                kedge.attributes.append(
+                        Attribute.load(
+                            trapi_version,
+                            biolink_version,
+                            attribute_info,
+                            )
                         )
-                self.attributes.append(_attribute.load(attribute_info))
-        valid, message = self.validate()
+        valid, message = kedge.validate()
         if valid:
-            return self
+            return kedge
         else:
-            raise InvalidTrapiComponent(self.trapi_version, 'KEdge', message)
-        return self
+            print(kedge.to_dict())
+            raise InvalidTrapiComponent(trapi_version, 'KEdge', message)
+        return kedge
     
     def add_attribute(self, 
             attribute_type_id,
@@ -283,32 +333,38 @@ class KnowledgeGraph(TrapiBaseClass):
         self.edge_counter = 0
         super().__init__(trapi_version, biolink_version)
 
-    def add_node(self, name, categories):
+    def add_node(self, curie, name, categories):
         # Run categories through Biolink
         if type(categories) is not list and categories is not None:
-            categories = BiolinkEntity(categories)
+            categories = [BiolinkEntity(categories, biolink_version=self.biolink_version)]
         elif categories is not None:
-            categories = [BiolinkEntity(category) for category in categories]
-        node_id = 'n{}'.format(self.node_counter)
+            _categories = []
+            for category in categories:
+                if type(category) is BiolinkEntity:
+                    _categories.append(category)
+                else:
+                    _categories.append(BiolinkEntity(category, biolink_version=self.biolink_version))
+            categories = _categories
         self.node_counter += 1
-        self.nodes[node_id] = QNode(
+        self.nodes[curie] = KNode(
                 trapi_version=self.trapi_version,
                 biolink_version=self.biolink_version,
                 name=name,
                 categories=categories
                 )
-        return node_id
+        return curie
 
-    def add_edge(self, q_subject, q_object, predicate=None, relation=None):
+    def add_edge(self, k_subject, k_object, predicate=None, relation=None):
         # Run predicates through Biolink
-        predicate = BiolinkEntity(predicate)
+        if type(predicate) is not BiolinkEntity:
+            predicate = BiolinkEntity(predicate, biolink_version=self.biolink_version)
         edge_id = 'e{}'.format(self.edge_counter)
         self.edge_counter += 1
-        self.edges[edge_id] = QEdge(
+        self.edges[edge_id] = KEdge(
                 trapi_version=self.trapi_version,
                 biolink_version=self.biolink_version,
-                q_subject=q_subject,
-                q_object=q_object,
+                k_subject=k_subject,
+                k_object=k_object,
                 predicate=predicate,
                 relation=relation,
                 )
@@ -381,19 +437,26 @@ class KnowledgeGraph(TrapiBaseClass):
         except ValidationError as ex:
             return False, ex.message
 
-    def load(self, knowledge_graph):
+    @staticmethod
+    def load(trapi_version, biolink_version, knowledge_graph):
+        new_knowledge_graph = KnowledgeGraph(trapi_version, biolink_version)
         # Load Nodes
         for node_id, node_info in knowledge_graph["nodes"].items():
-            _node = KNode(trapi_version=self.trapi_version, biolink_version=self.biolink_version)
-            self.nodes[node_id] = _node.load(node_info)
+            new_knowledge_graph.nodes[node_id] = KNode.load(
+                    trapi_version,
+                    biolink_version,
+                    node_info,
+                    )
         # Load Edges
         for edge_id, edge_info in knowledge_graph["edges"].items():
-            _edge = KEdge(trapi_version=self.trapi_version, biolink_version=self.biolink_version)
-            self.edges[edge_id] = _edge.load(edge_info)
-        valid, message = self.validate()
+            new_knowledge_graph.edges[edge_id] = KEdge.load(
+                    trapi_version,
+                    biolink_version,
+                    edge_info,
+                    )
+        valid, message = new_knowledge_graph.validate()
         if valid:
-            return self
+            return new_knowledge_graph
         else:
-            raise InvalidTrapiComponent(self.trapi_version, 'KnowledgeGraph', message)
-        return self
+            raise InvalidTrapiComponent(trapi_version, 'KnowledgeGraph', message)
         

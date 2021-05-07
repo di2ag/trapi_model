@@ -36,6 +36,12 @@ class TestNcatsRepo(unittest.TestCase):
                 if os.path.splitext(filename)[-1] == '.json':
                     filepath = os.path.join(ars_predicates_dir, filename)
                     query = Query('1.0').load(query_filepath=filepath)
+                    query_dict = query.to_dict()
+                    #print(json.dumps(query_dict, indent=2))
+                    if query.is_batch_query():
+                        batch = query.expand_batch_query()
+                        print(json.dumps(batch, indent=2))
+                        input()
             except UnknownBiolinkEntity as ex:
                 logger.critical('Failed on file {} with {}'.format(filename, ex.message))
 
@@ -47,6 +53,12 @@ class TestNcatsRepo(unittest.TestCase):
                 if os.path.splitext(filename)[-1] == '.json':
                     filepath = os.path.join(ars_predicates_dir, filename)
                     query = Query('1.0').load(query_filepath=filepath)
+                    _ = query.to_dict()
+                    # Test if its a batch query and if so extract
+                    if query.is_batch_query():
+                        batch = query.expand_batch_query()
+                        print(json.dumps(batch, indent=2))
+                        input()
             except UnknownBiolinkEntity as ex:
                 logger.critical('Failed on file {} with {}'.format(filename, ex.message))
     
@@ -58,5 +70,11 @@ class TestNcatsRepo(unittest.TestCase):
                 if os.path.splitext(filename)[-1] == '.json':
                     filepath = os.path.join(ars_predicates_dir, filename)
                     query = Query('1.0').load(query_filepath=filepath)
+                    query_dict = query.to_dict()
+                    print(json.dumps(query_dict, indent=2))
+                    if query.is_batch_query():
+                        batch = query.expand_batch_query()
+                        print(json.dumps([_q.to_dict() for _q in batch], indent=2))
+                        input()
             except UnknownBiolinkEntity as ex:
                 logger.critical('Failed on file {} with {}'.format(filename, ex.message))
