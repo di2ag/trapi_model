@@ -105,7 +105,6 @@ class Results(TrapiBaseClass):
         for qg_id, kg_ids in edge_bindings.items():
             for kg_id in kg_ids:
                 result.add_edge_binding(qg_id, kg_id)
-        print(json.dumps(result.to_dict(), indent=2))
         self.results.append(result)
 
     def to_dict(self):
@@ -128,16 +127,13 @@ class Binding(TrapiBaseClass):
     def __init__(self, trapi_version, biolink_version, kg_id=None):
         self.id = kg_id
         super().__init__(trapi_version, biolink_version)
-
-        print(json.dumps(self.to_dict(), indent=2))
-
+    
     def to_dict(self):
         if self.trapi_version == '1.0' or self.trapi_version == '1.1':
             return {"id": self.id}
 
     @staticmethod
     def load(trapi_version, biolink_version, binding_info):
-        print(binding_info)
         kg_id = binding_info.pop("id")
         binding = Binding(trapi_version, biolink_version, kg_id=kg_id)
         return binding

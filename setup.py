@@ -16,14 +16,19 @@ setup(
     packages=[
         'trapi_model',
         'trapi_model.data',
+        'trapi_model.data.biolink_schemas',
+        'trapi_model.data.trapi_schemas',
         ],
-    package_data={'trapi_model.data': ['*.yaml']},
+    package_data={
+        'trapi_model.data.biolink_schemas': ['*.yaml', '*.yml'],
+        'trapi_model.data.trapi_schemas': ['*.yaml', '*.yml']
+        },
     include_package_data=True,
     install_requires=[
         'pyyaml>=5.1',
         'jsonschema',
         'bmt',
-        'git+git://github.com/di2ag/reasoner-validator@master#egg=reasoner-validator',
+        'reasoner-validator @ git+https://github.com/di2ag/reasoner-validator@master#egg=reasoner-validator',
     ],
     zip_safe=False,
     python_requires='>=3.6',

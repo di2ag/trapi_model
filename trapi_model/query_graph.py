@@ -103,7 +103,6 @@ class QNode(TrapiBaseClass):
             self.constraints = constraints
         self.categories = categories
         super().__init__(trapi_version, biolink_version)
-
         valid, message = self.validate()
         if not valid:
             raise InvalidTrapiComponent(trapi_version, 'QNode', message)
@@ -188,7 +187,7 @@ class QNode(TrapiBaseClass):
                 qnode.set_ids(ids)
             categories = node_info.pop("categories", None)
             if categories is not None:
-                self.categories.set_categories(categories)
+                qnode.set_categories(categories)
             constraints = node_info.pop("constraints", None)
             if constraints is not None:
                 # Process constraints
@@ -416,7 +415,7 @@ class QueryGraph(TrapiBaseClass):
 
     def add_node(self, ids, categories):
         # Run categories through Biolink
-        if categories is not list and categories is not None:
+        if type(categories) is not list and categories is not None:
             categories = [BiolinkEntity(categories, self.biolink_version)]
         elif categories is not None:
             categories = [BiolinkEntity(category, biolink_version=self.biolink_version) for category in categories]
@@ -432,7 +431,7 @@ class QueryGraph(TrapiBaseClass):
 
     def add_edge(self, q_subject, q_object, predicates, relation=None):
         # Run predicates through Biolink
-        if predicates is not list and predicates is not None:
+        if type(predicates) is not list and predicates is not None:
             predicates = [BiolinkEntity(predicates, self.biolink_version)]
         elif predicates is not None:
             predicates = [BiolinkEntity(predicate, biolink_version=self.biolink_version) for predicate in predicates]

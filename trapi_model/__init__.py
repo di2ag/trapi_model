@@ -28,6 +28,8 @@ class Query(TrapiBaseClass):
         return {
                 "message": self.message.to_dict(),
                 "max_results": self.max_results,
+                "trapi_version": self.trapi_version,
+                "biolink_version": self.biolink_version,
                 }
 
     def validate(self):

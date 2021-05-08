@@ -280,7 +280,6 @@ class KEdge(TrapiBaseClass):
         if valid:
             return kedge
         else:
-            print(kedge.to_dict())
             raise InvalidTrapiComponent(trapi_version, 'KEdge', message)
         return kedge
     
