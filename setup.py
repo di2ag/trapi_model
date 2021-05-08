@@ -28,7 +28,6 @@ setup(
         'pyyaml>=5.1',
         'jsonschema',
         'bmt',
-        'reasoner-validator @ https://github.com/di2ag/reasoner-validator@master#egg=reasoner-validator',
     ],
     zip_safe=False,
     python_requires='>=3.6',
