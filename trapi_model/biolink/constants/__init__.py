@@ -74,3 +74,33 @@ else:
                 biolink_entity_name,
                 biolink_entity,
                 )
+
+def get_biolink_entity(name):
+    if not BIOLINK_DEBUG:
+        return BiolinkEntity(name)
+    if 'biolink:' in name:
+        parsed_name = name.split(':')[-1]
+        # Check if its a predicate or class based on capitalization.
+        if parsed_name.lower() == parsed_name:
+            # All lowercase and therefore is a predicate.
+            # Convert to constants formatted name
+            formatted_name = 'BIOLINK_' + '_'.join(x.upper() for x in parsed_name.split('_')) + '_ENTITY'
+        else:
+            # Split Camal case
+            name_list = [[parsed_name[0]]]
+            for c in parsed_name[1:]:
+                if name_list[-1][-1].islower() and c.isupper():
+                    name_list.append(list(c))
+                else:
+                    name_list[-1].append(c)
+            name_list = [''.join(word) for word in name_list]
+            formatted_name = 'BIOLINK_' + '_'.join(x.upper() for x in name_list) + '_ENTITY'
+    else:
+        # Just convert spaced out biolink compliant string (that has the spaces).
+        formatted_name = 'BIOLINK_' + '_'.join(name.strip().upper().split(' ')) + '_ENTITY'
+    # Try to return formatted name
+    return getattr(
+            sys.modules[__name__],
+            formatted_name,
+            )
+

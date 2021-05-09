@@ -72,7 +72,10 @@ class BiolinkEntity:
     def get_inverse(self):
         if BIOLINK_DEBUG:
             logger.warning('In debug mode, inverses might be unstable.')
-            return BiolinkEntity(self.inverse, is_predicate=self.is_predicate, inverse=self.passed_name)
+            if self.inverse is not None:
+                return BiolinkEntity(self.inverse, is_predicate=self.is_predicate, inverse=self.passed_name)
+            else:
+                return None
         if self.inverse is not None:
             return BiolinkEntity(self.inverse)
         return self.inverse
@@ -85,7 +88,7 @@ class BiolinkEntity:
                 if is_predicate or self.is_predicate:
                     return 'biolink:' + self.passed_name.replace(' ', '_')
                 return 'biolink:' + ''.join(x for x in self.passed_name.title() if not x.isspace())
-        if self.is_predicate:
+        if self.is_predicate or hasattr(self.element, 'slot_uri'):
             return self.element.slot_uri
         else:
             return self.element.class_uri

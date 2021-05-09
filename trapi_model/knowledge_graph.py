@@ -2,13 +2,14 @@
 """
 TRAPI Knowedge Graph Data Classes
 """
-
+import sys
 import json
 from jsonschema import ValidationError
 
-from trapi_model.constants import *
+from trapi_model.biolink.constants import get_biolink_entity
+from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
-from trapi_model.base import TrapiBaseClass, BiolinkEntity
+from trapi_model.base import TrapiBaseClass
 
 from reasoner_validator import validate_Edge_1_0, validate_Edge_1_1, \
 validate_Node_1_0, validate_Node_1_1, validate_KnowledgeGraph_1_0, validate_KnowledgeGraph_1_1
@@ -130,14 +131,14 @@ class KNode(TrapiBaseClass):
     
     def set_categories(self, categories):
         if type(categories) is str:
-            self.categories = [BiolinkEntity(categories)]
+            self.categories = [get_biolink_entity(categories)]
         elif type(categories) is BiolinkEntity:
             self.categories = [categories]
         else:
             _categories = []
             for category in categories:
                 if type(category) is str:
-                    _categories.append(BiolinkEntity(category))
+                    _categories.append(get_biolink_entity(category))
                 elif type(category) is BiolinkEntity:
                     _categories.append(category)
             self.categories = _categories
@@ -239,7 +240,7 @@ class KEdge(TrapiBaseClass):
         if self.trapi_version == '1.0' or self.trapi_version == '1.1':
             predicate = self.predicate
             if predicate is not None:
-                predicate = predicate.get_curie(is_slot=True)
+                predicate = predicate.get_curie()
             _dict = {
                     "predicate": predicate,
                     "relation": self.relation,
@@ -264,7 +265,7 @@ class KEdge(TrapiBaseClass):
                 )
         predicate = kedge_info.pop("predicate", None)
         if predicate is not None:
-            kedge.predicate = BiolinkEntity(predicate, is_slot=True)
+            kedge.predicate = get_biolink_entity(predicate)
         kedge.relation = kedge_info.pop("relation", None)
         attributes = kedge_info.pop("attributes", None)
         if attributes is not None:

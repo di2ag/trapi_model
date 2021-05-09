@@ -7,7 +7,8 @@ import json
 from jsonschema import ValidationError
 from collections import defaultdict
 
-from trapi_model.constants import *
+from trapi_model.biolink.constants import get_biolink_entity
+from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 

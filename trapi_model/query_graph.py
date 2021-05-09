@@ -5,9 +5,10 @@ TRAPI Query Graph Data Classes
 import json
 from jsonschema import ValidationError
 
-from trapi_model.constants import *
+from trapi_model.biolink.constants import get_biolink_entity
+from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
-from trapi_model.base import TrapiBaseClass, BiolinkEntity
+from trapi_model.base import TrapiBaseClass
 
 from reasoner_validator import validate_QEdge_1_0, validate_QEdge_1_1, \
 validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryGraph_1_1
@@ -121,14 +122,14 @@ class QNode(TrapiBaseClass):
 
     def set_categories(self, categories):
         if type(categories) is str:
-            self.categories = [BiolinkEntity(categories)]
+            self.categories = [get_biolink_entity(categories)]
         elif type(categories) is BiolinkEntity:
             self.categories = [categories]
         else:
             _categories = []
             for category in categories:
                 if type(category) is str:
-                    _categories.append(BiolinkEntity(category))
+                    _categories.append(get_biolink_entity(category))
                 elif type(category) is BiolinkEntity:
                     _categories.append(category)
             self.categories = _categories
@@ -280,14 +281,14 @@ class QEdge(TrapiBaseClass):
     
     def set_predicates(self, predicates):
         if type(predicates) is str:
-            self.predicates = [BiolinkEntity(predicates)]
+            self.predicates = [get_biolink_entity(predicates)]
         elif type(predicates) is BiolinkEntity:
             self.predicates = [predicates]
         else:
             _predicates = []
             for predicate in predicates:
                 if type(predicate) is str:
-                    _predicates.append(BiolinkEntity(predicate))
+                    _predicates.append(get_biolink_entity(predicate))
                 elif type(category) is BiolinkEntity:
                     _predicates.append(predicate)
             self.predicates = _predicates
@@ -295,7 +296,7 @@ class QEdge(TrapiBaseClass):
     def to_dict(self):
         predicates = self.predicates
         if predicates is not None:
-            predicates = [_predicate.get_curie(is_slot=True) for _predicate in predicates]
+            predicates = [_predicate.get_curie() for _predicate in predicates]
         if self.trapi_version == '1.0':
             _dict = {
                     "predicate": predicates,
@@ -506,7 +507,7 @@ class QueryGraph(TrapiBaseClass):
         _categories1 = []
         for _category in categories1:
             if type(_category) is str:
-                _categories1.append(BiolinkEntity(_category))
+                _categories1.append(get_biolink_entity(_category))
             elif type(_category) is BiolinkEntity:
                 _categories1.append(_category)
             else:
@@ -514,7 +515,7 @@ class QueryGraph(TrapiBaseClass):
         _categories2 = []
         for _category in categories2:
             if type(_category) is str:
-                _categories2.append(BiolinkEntity(_category))
+                _categories2.append(get_biolink_entity(_category))
             elif type(_category) is BiolinkEntity:
                 _categories2.append(_category)
             else:
