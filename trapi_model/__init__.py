@@ -46,8 +46,3 @@ def set_biolink_version(biolink_version):
 def set_biolink_debug_mode(option=False):
     global BIOLINK_DEBUG
     BIOLINK_DEBUG = option
-
-#def use_supported_biolink_constants(supported_constants_file=None):
-#    # Set supported constaints file is None constants module will run check.
-#    global SUPPORTED_CONSTANTS_FILE
-#    SUPPORTED_CONSTANTS_FILE = supported_constants_file
