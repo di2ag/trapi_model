@@ -1,0 +1,576 @@
+name,is_predicate,inverse,ancestors
+ontology class,False,
+annotation,False,
+quantity value,False,,annotation
+attribute,False,,annotation
+biological sex,False,,attribute,annotation
+phenotypic sex,False,,biological sex,attribute,annotation
+genotypic sex,False,,biological sex,attribute,annotation
+severity value,False,,attribute,annotation
+relationship quantifier,False,
+sensitivity quantifier,False,,relationship quantifier
+specificity quantifier,False,,relationship quantifier
+pathognomonicity quantifier,False,,specificity quantifier,relationship quantifier
+frequency quantifier,False,,relationship quantifier
+chemical or drug or treatement,False,
+entity,False,
+named thing,False,,entity
+relationship type,False,,ontology class
+gene ontology class,False,,ontology class
+unclassified ontology class,False,,ontology class
+taxonomic rank,False,,ontology class
+organism taxon,False,,named thing,entity
+administrative entity,False,,named thing,entity
+agent,False,,administrative entity,named thing,entity
+information content entity,False,,named thing,entity
+dataset,False,,information content entity,named thing,entity
+dataset distribution,False,,information content entity,named thing,entity
+dataset version,False,,information content entity,named thing,entity
+dataset summary,False,,information content entity,named thing,entity
+confidence level,False,,information content entity,named thing,entity
+evidence type,False,,information content entity,named thing,entity
+publication,False,,information content entity,named thing,entity
+book,False,,publication,information content entity,named thing,entity
+book chapter,False,,publication,information content entity,named thing,entity
+serial,False,,publication,information content entity,named thing,entity
+article,False,,publication,information content entity,named thing,entity
+physical essence or occurrent,False,
+physical essence,False,,physical essence or occurrent
+physical entity,False,,named thing,entity
+occurrent,False,,physical essence or occurrent
+activity and behavior,False,,occurrent,physical essence or occurrent
+activity,False,,named thing,entity
+procedure,False,,named thing,entity
+phenomenon,False,,named thing,entity
+device,False,,named thing,entity
+study population,False,,population of individual organisms,organismal entity,biological entity,named thing,entity
+subject of investigation,False,
+material sample,False,,physical entity,named thing,entity
+planetary entity,False,,named thing,entity
+environmental process,False,,planetary entity,named thing,entity
+environmental feature,False,,planetary entity,named thing,entity
+geographic location,False,,planetary entity,named thing,entity
+geographic location at time,False,,geographic location,planetary entity,named thing,entity
+biological entity,False,,named thing,entity
+thing with taxon,False,
+molecular entity,False,,biological entity,named thing,entity
+biological process or activity,False,,biological entity,named thing,entity
+molecular activity,False,,biological process or activity,biological entity,named thing,entity
+biological process,False,,biological process or activity,biological entity,named thing,entity
+pathway,False,,biological process,biological process or activity,biological entity,named thing,entity
+physiological process,False,,biological process,biological process or activity,biological entity,named thing,entity
+behavior,False,,biological process,biological process or activity,biological entity,named thing,entity
+death,False,,biological process,biological process or activity,biological entity,named thing,entity
+mixture,False,
+chemical substance,False,,molecular entity,biological entity,named thing,entity
+carbohydrate,False,,chemical substance,molecular entity,biological entity,named thing,entity
+processed material,False,,chemical substance,molecular entity,biological entity,named thing,entity
+drug,False,,molecular entity,biological entity,named thing,entity
+food component,False,,chemical substance,molecular entity,biological entity,named thing,entity
+environmental food contaminant,False,,chemical substance,molecular entity,biological entity,named thing,entity
+food additive,False,,chemical substance,molecular entity,biological entity,named thing,entity
+nutrient,False,,chemical substance,molecular entity,biological entity,named thing,entity
+macronutrient,False,,nutrient,chemical substance,molecular entity,biological entity,named thing,entity
+micronutrient,False,,nutrient,chemical substance,molecular entity,biological entity,named thing,entity
+vitamin,False,,micronutrient,nutrient,chemical substance,molecular entity,biological entity,named thing,entity
+food,False,,molecular entity,biological entity,named thing,entity
+metabolite,False,,chemical substance,molecular entity,biological entity,named thing,entity
+organism attribute,False,,attribute,annotation
+phenotypic quality,False,,organism attribute,attribute,annotation
+inheritance,False,,organism attribute,attribute,annotation
+organismal entity,False,,biological entity,named thing,entity
+life stage,False,,organismal entity,biological entity,named thing,entity
+individual organism,False,,organismal entity,biological entity,named thing,entity
+population of individual organisms,False,,organismal entity,biological entity,named thing,entity
+disease or phenotypic feature,False,,biological entity,named thing,entity
+disease,False,,disease or phenotypic feature,biological entity,named thing,entity
+phenotypic feature,False,,disease or phenotypic feature,biological entity,named thing,entity
+behavioral feature,False,,phenotypic feature,disease or phenotypic feature,biological entity,named thing,entity
+anatomical entity,False,,organismal entity,biological entity,named thing,entity
+cellular component,False,,anatomical entity,organismal entity,biological entity,named thing,entity
+cell,False,,anatomical entity,organismal entity,biological entity,named thing,entity
+cell line,False,,organismal entity,biological entity,named thing,entity
+gross anatomical structure,False,,anatomical entity,organismal entity,biological entity,named thing,entity
+macromolecular machine mixin,False,
+gene or gene product,False,,macromolecular machine mixin
+gene,False,,genomic entity,molecular entity,biological entity,named thing,entity
+gene product mixin,False,,gene or gene product,macromolecular machine mixin
+gene product isoform mixin,False,,gene product mixin,gene or gene product,macromolecular machine mixin
+macromolecular complex mixin,False,,macromolecular machine mixin
+genomic entity,False,,molecular entity,biological entity,named thing,entity
+genome,False,,genomic entity,molecular entity,biological entity,named thing,entity
+exon,False,,genomic entity,molecular entity,biological entity,named thing,entity
+transcript,False,,genomic entity,molecular entity,biological entity,named thing,entity
+coding sequence,False,,genomic entity,molecular entity,biological entity,named thing,entity
+protein,False,,genomic entity,molecular entity,biological entity,named thing,entity
+protein isoform,False,,protein,genomic entity,molecular entity,biological entity,named thing,entity
+RNA product,False,,transcript,genomic entity,molecular entity,biological entity,named thing,entity
+RNA product isoform,False,,RNA product,transcript,genomic entity,molecular entity,biological entity,named thing,entity
+noncoding RNA product,False,,RNA product,transcript,genomic entity,molecular entity,biological entity,named thing,entity
+microRNA,False,
+siRNA,False,
+gene grouping mixin,False,
+gene family,False,,molecular entity,biological entity,named thing,entity
+zygosity,False,,attribute,annotation
+genotype,False,,genomic entity,molecular entity,biological entity,named thing,entity
+haplotype,False,,genomic entity,molecular entity,biological entity,named thing,entity
+sequence variant,False,,genomic entity,molecular entity,biological entity,named thing,entity
+snv,False,,sequence variant,genomic entity,molecular entity,biological entity,named thing,entity
+reagent targeted gene,False,,genomic entity,molecular entity,biological entity,named thing,entity
+clinical attribute,False,,attribute,annotation
+clinical measurement,False,,clinical attribute,attribute,annotation
+clinical modifier,False,,clinical attribute,attribute,annotation
+clinical course,False,,clinical attribute,attribute,annotation
+onset,False,,clinical course,clinical attribute,attribute,annotation
+clinical entity,False,,named thing,entity
+clinical trial,False,,clinical entity,named thing,entity
+clinical intervention,False,,clinical entity,named thing,entity
+clinical finding,False,,phenotypic feature,disease or phenotypic feature,biological entity,named thing,entity
+hospitalization,False,,clinical intervention,clinical entity,named thing,entity
+socioeconomic attribute,False,,attribute,annotation
+case,False,,individual organism,organismal entity,biological entity,named thing,entity
+cohort,False,,study population,population of individual organisms,organismal entity,biological entity,named thing,entity
+exposure event,False,
+genomic background exposure,False,,genomic entity,molecular entity,biological entity,named thing,entity
+pathological entity mixin,False,
+pathological process,False,,biological process,biological process or activity,biological entity,named thing,entity
+pathological process exposure,False,,pathological process,biological process,biological process or activity,biological entity,named thing,entity
+pathological anatomical structure,False,,anatomical entity,organismal entity,biological entity,named thing,entity
+pathological anatomical exposure,False,,pathological anatomical structure,anatomical entity,organismal entity,biological entity,named thing,entity
+disease or phenotypic feature exposure,False,,disease or phenotypic feature,biological entity,named thing,entity
+chemical exposure,False,,chemical substance,molecular entity,biological entity,named thing,entity
+complex chemical exposure,False,,chemical exposure,chemical substance,molecular entity,biological entity,named thing,entity
+drug exposure,False,,drug,molecular entity,biological entity,named thing,entity
+drug to gene interaction exposure,False,,drug exposure,drug,molecular entity,biological entity,named thing,entity
+treatment,False,,named thing,entity
+biotic exposure,False,,organism taxon,named thing,entity
+geographic exposure,False,,geographic location,planetary entity,named thing,entity
+environmental exposure,False,,environmental process,planetary entity,named thing,entity
+behavioral exposure,False,,behavior,biological process,biological process or activity,biological entity,named thing,entity
+socioeconomic exposure,False,,behavior,biological process,biological process or activity,biological entity,named thing,entity
+outcome,False,
+pathological process outcome,False,,pathological process,biological process,biological process or activity,biological entity,named thing,entity
+pathological anatomical outcome,False,,pathological anatomical structure,anatomical entity,organismal entity,biological entity,named thing,entity
+disease or phenotypic feature outcome,False,,disease or phenotypic feature,biological entity,named thing,entity
+behavioral outcome,False,,behavior,biological process,biological process or activity,biological entity,named thing,entity
+hospitalization outcome,False,,hospitalization,clinical intervention,clinical entity,named thing,entity
+mortality outcome,False,,death,biological process,biological process or activity,biological entity,named thing,entity
+epidemiological outcome,False,,biological entity,named thing,entity
+socioeconomic outcome,False,,behavior,biological process,biological process or activity,biological entity,named thing,entity
+association,False,,entity
+contributor association,False,,association,entity
+genotype to genotype part association,False,,association,entity
+genotype to gene association,False,,association,entity
+genotype to variant association,False,,association,entity
+gene to gene association,False,,association,entity
+gene to gene homology association,False,,gene to gene association,association,entity
+gene expression mixin,False,
+gene to gene coexpression association,False,,gene to gene association,association,entity
+pairwise gene to gene interaction,False,,gene to gene association,association,entity
+pairwise molecular interaction,False,,pairwise gene to gene interaction,gene to gene association,association,entity
+cell line to entity association mixin,False,
+cell line to disease or phenotypic feature association,False,,association,entity
+molecular entity to entity association mixin,False,
+drug to entity association mixin,False,,molecular entity to entity association mixin
+chemical to entity association mixin,False,,molecular entity to entity association mixin
+case to entity association mixin,False,
+chemical to chemical association,False,,association,entity
+chemical to chemical derivation association,False,,chemical to chemical association,association,entity
+chemical to disease or phenotypic feature association,False,,association,entity
+chemical to pathway association,False,,association,entity
+chemical to gene association,False,,association,entity
+drug to gene association,False,,association,entity
+material sample to entity association mixin,False,
+material sample derivation association,False,,association,entity
+material sample to disease or phenotypic feature association,False,,association,entity
+disease to entity association mixin,False,
+entity to exposure event association mixin,False,
+disease to exposure event association,False,,association,entity
+exposure event to entity association mixin,False,
+entity to outcome association mixin,False,
+exposure event to outcome association,False,,association,entity
+frequency qualifier mixin,False,
+entity to feature or disease qualifiers mixin,False,,frequency qualifier mixin
+entity to phenotypic feature association mixin,False,,entity to feature or disease qualifiers mixin,frequency qualifier mixin
+entity to disease association mixin,False,,entity to feature or disease qualifiers mixin,frequency qualifier mixin
+disease or phenotypic feature to entity association mixin,False,
+disease or phenotypic feature association to location association,False,,association,entity
+disease or phenotypic feature to location association,False,,association,entity
+entity to disease or phenotypic feature association mixin,False,
+genotype to entity association mixin,False,
+genotype to phenotypic feature association,False,,association,entity
+exposure event to phenotypic feature association,False,,association,entity
+disease to phenotypic feature association,False,,association,entity
+case to phenotypic feature association,False,,association,entity
+behavior to behavioral feature association,False,,association,entity
+gene to entity association mixin,False,
+variant to entity association mixin,False,
+gene to phenotypic feature association,False,,association,entity
+gene to disease association,False,,association,entity
+variant to gene association,False,,association,entity
+variant to gene expression association,False,,variant to gene association,association,entity
+variant to population association,False,,association,entity
+population to population association,False,,association,entity
+variant to phenotypic feature association,False,,association,entity
+variant to disease association,False,,association,entity
+genotype to disease association,False,,association,entity
+model to disease association mixin,False,
+gene as a model of disease association,False,,gene to disease association,association,entity
+variant as a model of disease association,False,,variant to disease association,association,entity
+genotype as a model of disease association,False,,genotype to disease association,association,entity
+cell line as a model of disease association,False,,cell line to disease or phenotypic feature association,association,entity
+organismal entity as a model of disease association,False,,association,entity
+gene has variant that contributes to disease association,False,,gene to disease association,association,entity
+gene to expression site association,False,,association,entity
+sequence variant modulates treatment association,False,,association,entity
+functional association,False,,association,entity
+macromolecular machine to entity association mixin,False,
+macromolecular machine to molecular activity association,False,,functional association,association,entity
+macromolecular machine to biological process association,False,,functional association,association,entity
+macromolecular machine to cellular component association,False,,functional association,association,entity
+gene to go term association,False,,functional association,association,entity
+sequence association,False,,association,entity
+genomic sequence localization,False,,sequence association,association,entity
+sequence feature relationship,False,,association,entity
+transcript to gene relationship,False,,sequence feature relationship,association,entity
+gene to gene product relationship,False,,sequence feature relationship,association,entity
+exon to transcript relationship,False,,sequence feature relationship,association,entity
+gene regulatory relationship,False,,association,entity
+anatomical entity to anatomical entity association,False,,association,entity
+anatomical entity to anatomical entity part of association,False,,anatomical entity to anatomical entity association,association,entity
+anatomical entity to anatomical entity ontogenic association,False,,anatomical entity to anatomical entity association,association,entity
+organism taxon to entity association,False,
+organism taxon to organism taxon association,False,,association,entity
+organism taxon to organism taxon specialization,False,,organism taxon to organism taxon association,association,entity
+organism taxon to organism taxon interaction,False,,organism taxon to organism taxon association,association,entity
+organism taxon to environment association,False,,association,entity
+has attribute,False,
+has attribute type,False,
+has qualitative value,False,
+has quantitative value,False,
+has numeric value,False,
+has unit,False,
+node property,False,
+id,False,
+iri,False,
+type,False,
+category,False,,type
+name,False,
+source,False,
+filler,False,,node property
+symbol,False,,node property
+synonym,False,,node property
+has topic,False,,node property
+xref,False,,node property
+full name,False,,node property
+description,False,
+systematic synonym,False,,node property
+affiliation,False,,node property
+address,False,,node property
+latitude,False,,node property
+longitude,False,,node property
+timepoint,False,,node property
+creation date,False,,node property
+update date,False,,node property
+aggregate statistic,False,,node property
+has count,False,,aggregate statistic,node property
+has total,False,,aggregate statistic,node property
+has quotient,False,,aggregate statistic,node property
+has percentage,False,,aggregate statistic,node property
+has dataset,False,,node property
+source web page,False,,node property
+source logo,False,,node property
+retrieved on,False,,node property
+version of,False,,node property
+version,False,,node property
+license,False,,node property
+rights,False,,node property
+format,False,,node property
+created_with,False,
+download url,False,,node property
+dataset download url,False,,node property
+distribution download url,False,,node property
+ingest date,False,,node property
+has distribution,False,,node property
+published in,False,,node property
+iso abbreviation,False,,node property
+authors,False,,node property
+volume,False,,node property
+chapter,False,,node property
+issue,False,,node property
+pages,False,,node property
+summary,False,,node property
+keywords,False,,node property
+mesh terms,False,,node property
+has biological sequence,False,,node property
+has gene or gene product,False,,node property
+has gene,False,,has gene or gene product,node property
+has zygosity,False,,node property
+has chemical formula,False,,node property
+is metabolite,False,,node property
+has constituent,False,,node property
+has drug,False,,node property
+has device,False,,node property
+has procedure,False,,node property
+has receptor,False,,node property
+has stressor,False,,node property
+has route,False,,node property
+has population context,False,,association slot
+has temporal context,False,,association slot
+related to,True,
+superclass of,True,subclass of,related to
+subclass of,True,superclass of,related to
+same as,True,,exact match,close match,related to
+close match,True,,related to
+exact match,True,,close match,related to
+broad match,True,narrow match,related to
+narrow match,True,broad match,related to
+opposite of,True,,related to
+contributor,True,,related to
+provider,True,,contributor,related to
+publisher,True,,contributor,related to
+editor,True,,contributor,related to
+author,True,,contributor,related to
+interacts with,True,,related to
+physically interacts with,True,,interacts with,related to
+molecularly interacts with,True,,physically interacts with,interacts with,related to
+genetically interacts with,True,,interacts with,related to
+affects,True,affected by,related to
+affected by,True,affects,related to
+chemical role mixin,False,
+biological role mixin,False,
+affects abundance of,True,,affects,related to
+increases abundance of,True,,affects abundance of,affects,related to
+decreases abundance of,True,,affects abundance of,affects,related to
+affects activity of,True,,affects,related to
+increases activity of,True,,affects activity of,affects,related to
+decreases activity of,True,,affects activity of,affects,related to
+affects expression of,True,,affects,related to
+increases expression of,True,,affects expression of,affects,related to
+decreases expression of,True,,affects expression of,affects,related to
+affects folding of,True,,affects,related to
+increases folding of,True,,affects folding of,affects,related to
+decreases folding of,True,,affects folding of,affects,related to
+affects localization of,True,,affects,related to
+increases localization of,True,,affects localization of,affects,related to
+decreases localization of,True,,affects localization of,affects,related to
+affects metabolic processing of,True,,affects,related to
+increases metabolic processing of,True,,affects metabolic processing of,affects,related to
+decreases metabolic processing of,True,,affects metabolic processing of,affects,related to
+affects molecular modification of,True,,affects,related to
+increases molecular modification of,True,,affects molecular modification of,affects,related to
+decreases molecular modification of,True,,affects molecular modification of,affects,related to
+affects synthesis of,True,,affects,related to
+increases synthesis of,True,,affects synthesis of,affects,related to
+decreases synthesis of,True,,affects synthesis of,affects,related to
+affects degradation of,True,,affects,related to
+increases degradation of,True,,affects degradation of,affects,related to
+decreases degradation of,True,,affects degradation of,affects,related to
+affects mutation rate of,True,,affects,related to
+increases mutation rate of,True,,affects mutation rate of,affects,related to
+decreases mutation rate of,True,,affects mutation rate of,affects,related to
+affects response to,True,,affects,related to
+increases response to,True,,affects response to,affects,related to
+decreases response to,True,,affects response to,affects,related to
+affects splicing of,True,,affects,related to
+increases splicing of,True,,affects splicing of,affects,related to
+decreases splicing of,True,,affects splicing of,affects,related to
+affects stability of,True,,affects,related to
+increases stability of,True,,affects stability of,affects,related to
+decreases stability of,True,,affects stability of,affects,related to
+affects transport of,True,,affects,related to
+increases transport of,True,,affects transport of,affects,related to
+decreases transport of,True,,affects transport of,affects,related to
+affects secretion of,True,,affects,related to
+increases secretion of,True,,affects secretion of,affects,related to
+decreases secretion of,True,,affects secretion of,affects,related to
+affects uptake of,True,,affects,related to
+increases uptake of,True,,affects uptake of,affects,related to
+decreases uptake of,True,,affects uptake of,affects,related to
+regulates,False,regulated by
+regulated by,False,regulates
+positively regulates,False,positively regulated by,regulates
+positively regulated by,False,positively regulates,regulated by
+negatively regulates,False,negatively regulated by,regulates
+negatively regulated by,False,negatively regulates,regulated by
+process regulates process,True,process regulated by process,affects,related to
+process regulated by process,True,process regulates process,affected by,related to
+process positively regulates process,True,process positively regulated by process,process regulates process,affects,related to
+process positively regulated by process,True,process positively regulates process,process regulated by process,affected by,related to
+process negatively regulates process,True,process negatively regulated by process,process regulates process,affects,related to
+process negatively regulated by process,True,process negatively regulates process,process regulated by process,affected by,related to
+entity regulates entity,True,entity regulated by entity,affects,related to
+entity regulated by entity,True,entity regulates entity,affected by,related to
+entity positively regulates entity,True,entity positively regulated by entity,entity regulates entity,affects,related to
+entity positively regulated by entity,True,entity positively regulates entity,entity regulated by entity,affected by,related to
+entity negatively regulates entity,True,entity negatively regulated by entity,entity regulates entity,affects,related to
+entity negatively regulated by entity,True,entity negatively regulates entity,entity regulated by entity,affected by,related to
+disrupts,True,disrupted by,affects,related to
+disrupted by,True,disrupts,affected by,related to
+gene product of,True,has gene product,related to
+has gene product,True,gene product of,related to
+transcribed to,True,transcribed from,related to
+transcribed from,True,transcribed to,related to
+translates to,True,translation of,related to
+translation of,True,translates to,related to
+homologous to,True,,similar to,related to
+paralogous to,True,,homologous to,similar to,related to
+orthologous to,True,,homologous to,similar to,related to
+xenologous to,True,,homologous to,similar to,related to
+coexists with,True,,related to
+in pathway with,True,,coexists with,related to
+in complex with,True,,coexists with,related to
+in cell population with,True,,coexists with,related to
+colocalizes with,True,,coexists with,related to
+genetic association,True,,related to
+gene associated with condition,True,condition associated with gene,genetic association,related to
+condition associated with gene,True,gene associated with condition,genetic association,related to
+affects risk for,True,,related to
+predisposes,True,,affects risk for,related to
+contributes to,True,,related to
+causes,True,caused by,contributes to,related to
+caused by,True,causes,related to
+ameliorates,True,,affects,related to
+exacerbates,True,,affects,related to
+treats,True,treated by,ameliorates,affects,related to
+treated by,True,treats,related to
+approved to treat,True,approved for treatment by,treats,ameliorates,affects,related to
+approved for treatment by,True,approved to treat,treated by,related to
+prevents,True,prevented by,affects risk for,related to
+prevented by,True,prevents,related to
+correlated with,True,,related to
+positively correlated with,True,,correlated with,related to
+negatively correlated with,True,,correlated with,related to
+coexpressed with,True,,correlated with,related to
+has biomarker,True,biomarker for,correlated with,related to
+biomarker for,True,has biomarker,correlated with,related to
+expressed in,True,expresses,related to
+expresses,True,expressed in,related to
+has phenotype,True,phenotype of,related to
+phenotype of,True,has phenotype,related to
+occurs in,True,,related to
+located in,True,location of,related to
+location of,True,located in,related to
+similar to,True,,related to
+chemically similar to,True,,similar to,related to
+has sequence location,True,,related to
+model of,True,,similar to,related to
+overlaps,True,,related to
+has part,True,part of,overlaps,related to
+part of,True,has part,overlaps,related to
+has input,True,,has participant,related to
+has output,True,,has participant,related to
+has participant,True,participates in,related to
+participates in,True,has participant,related to
+actively involved in,True,,participates in,related to
+capable of,True,,actively involved in,participates in,related to
+enables,True,enabled by,participates in,related to
+enabled by,True,enables,has participant,related to
+derives into,True,derives from,related to
+derives from,True,derives into,related to
+is metabolite of,True,has metabolite,derives from,related to
+has metabolite,True,is metabolite of,derives into,related to
+food component of,True,has food component,part of,overlaps,related to
+has food component,True,food component of,has part,overlaps,related to
+nutrient of,True,has nutrient,food component of,part of,overlaps,related to
+has nutrient,True,nutrient of,has food component,has part,overlaps,related to
+is active ingredient of,True,has active ingredient,part of,overlaps,related to
+has active ingredient,True,is active ingredient of,has part,overlaps,related to
+is excipient of,True,has excipient,part of,overlaps,related to
+has excipient,True,is excipient of,has part,overlaps,related to
+manifestation of,True,,related to
+produces,True,produced by,related to
+produced by,True,produces,related to
+temporally related to,True,,related to
+precedes,True,preceded by,temporally related to,related to
+preceded by,True,precedes,temporally related to,related to
+directly interacts with,True,,interacts with,related to
+affects expression in,True,,affects,related to
+has variant part,True,,has part,overlaps,related to
+related condition,True,,related to
+is sequence variant of,True,,related to
+is missense variant of,True,,is sequence variant of,related to
+is synonymous variant of,True,,is sequence variant of,related to
+is nonsense variant of,True,,is sequence variant of,related to
+is frameshift variant of,True,,is sequence variant of,related to
+is splice site variant of,True,,is sequence variant of,related to
+is nearby variant of,True,,is sequence variant of,related to
+is non coding variant of,True,,is sequence variant of,related to
+disease has basis in,True,,related to
+causes adverse event,True,,causes,contributes to,related to
+contraindicated for,True,,related to
+has not completed,True,,related to
+has completed,True,,related to
+decreases molecular interaction,True,,molecularly interacts with,physically interacts with,interacts with,related to
+increases molecular interaction,True,,molecularly interacts with,physically interacts with,interacts with,related to
+in linkage disequilibrium with,True,,related to
+has increased amount,True,,related to
+has decreased amount,True,,related to
+lacks part,True,,related to
+develops from,True,,related to
+in taxon,True,,related to
+has molecular consequence,True,,related to
+association slot,False,
+subject,False,,association slot
+object,False,,association slot
+predicate,False,,association slot
+edge label,False,,association slot
+logical interpretation,False,,association slot
+relation,False,,association slot
+negated,False,,association slot
+has confidence level,False,,association slot
+has evidence,False,,association slot
+provided by,False,,association slot
+association type,False,,association slot
+chi squared statistic,False,,association slot
+p value,False,,association slot
+interacting molecules category,False,,association slot
+quantifier qualifier,False,,association slot
+catalyst qualifier,False,,association slot
+expression site,False,,association slot
+stage qualifier,False,,association slot
+phenotypic state,False,,association slot
+qualifiers,False,,association slot
+frequency qualifier,False,,association slot
+severity qualifier,False,,association slot
+sex qualifier,False,,association slot
+onset qualifier,False,,association slot
+clinical modifier qualifier,False,,association slot
+sequence variant qualifier,False,,association slot
+publications,False,,association slot
+associated environmental context,False,,association slot
+sequence localization attribute,False,,association slot
+interbase coordinate,False,,sequence localization attribute,association slot
+start interbase coordinate,False,,interbase coordinate,sequence localization attribute,association slot
+end interbase coordinate,False,,interbase coordinate,sequence localization attribute,association slot
+genome build,False,,sequence localization attribute,association slot
+strand,False,,sequence localization attribute,association slot
+phase,False,,sequence localization attribute,association slot
+has taxonomic rank,False,
+chemical formula value,False,
+category type,False,
+iri type,False,
+label type,False,
+predicate type,False,
+narrative text,False,
+symbol type,False,
+frequency value,False,
+percentage frequency value,False,
+quotient,False,
+unit,False,
+time type,False,
+biological sequence,False,
+string,False,
+integer,False,
+boolean,False,
+float,False,
+double,False,
+decimal,False,
+time,False,
+date,False,
+datetime,False,
+uriorcurie,False,
+uri,False,
+ncname,False,
+objectidentifier,False,
+nodeidentifier,False,
