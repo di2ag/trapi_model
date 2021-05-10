@@ -1,5 +1,6 @@
 import json
 import os
+import uuid
 from jsonschema import ValidationError
 import copy
 import itertools
@@ -12,11 +13,14 @@ from trapi_model.message import Message
 
 
 class Query(TrapiBaseClass):
-    def __init__(self, trapi_version='1.1', biolink_version=None, max_results=10):
+    def __init__(self, trapi_version='1.1', biolink_version=None, max_results=10, q_id=None):
         self.trapi_version = trapi_version
         self.biolink_version = biolink_version
         self.message = Message(trapi_version, biolink_version)
         self.max_results = max_results
+        self.id = q_id
+        if q_id is None:
+            self.id = uuid.uuid4()
         super().__init__(trapi_version, biolink_version)
 
     def to_dict(self):
@@ -25,6 +29,7 @@ class Query(TrapiBaseClass):
                 "max_results": self.max_results,
                 "trapi_version": self.trapi_version,
                 "biolink_version": self.biolink_version,
+                "pk": self.id,
                 }
 
     def validate(self):
