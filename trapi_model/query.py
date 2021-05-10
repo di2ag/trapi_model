@@ -20,7 +20,7 @@ class Query(TrapiBaseClass):
         self.max_results = max_results
         self.id = q_id
         if q_id is None:
-            self.id = uuid.uuid4()
+            self.id = str(uuid.uuid4())
         super().__init__(trapi_version, biolink_version)
 
     def to_dict(self):
