@@ -46,3 +46,4 @@ class UnknownBiolinkEntity(Exception):
                 self.message,
                 self.name,
                 )
+

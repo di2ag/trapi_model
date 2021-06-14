@@ -9,9 +9,10 @@ from trapi_model.biolink.constants import get_biolink_entity
 from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
-
+from requests import request
 from reasoner_validator import validate_QEdge_1_0, validate_QEdge_1_1, \
 validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryGraph_1_1
+from processing_and_validation.semantic_processor import SemanticProcessor
 
 class QConstraintOrAdditionalProperty(TrapiBaseClass):
     def __init__(self,
@@ -168,9 +169,11 @@ class QNode(TrapiBaseClass):
             ids = node_info.pop("id", None)
             if ids is not None:
                 qnode.set_ids(ids)
+                qnode.meta_kg_validator.validate_prefixes(qnode.ids)
             categories = node_info.pop("category", None)
             if categories is not None:
                 qnode.set_categories(categories)
+                qnode.meta_kg_validator.validate_entities(qnode.set_categories)
             # Process constraints
             for name, constraint_info in node_info.items():
                 qnode.constraints.append(
@@ -186,9 +189,11 @@ class QNode(TrapiBaseClass):
             ids = node_info.pop("ids", None)
             if ids is not None:
                 qnode.set_ids(ids)
+                qnode.meta_kg_validator.validate_prefixes(qnode.ids)
             categories = node_info.pop("categories", None)
             if categories is not None:
                 qnode.set_categories(categories)
+                qnode.meta_kg_validator.validate_entities(qnode.categories)
             constraints = node_info.pop("constraints", None)
             if constraints is not None:
                 # Process constraints
@@ -272,6 +277,7 @@ class QEdge(TrapiBaseClass):
         valid, message = self.validate()
         if not valid:
             raise InvalidTrapiComponent(trapi_version, 'QEdge', message)
+        
 
     def find_constraint(self, name):
         for constraint in self.constraints:
@@ -343,8 +349,15 @@ class QEdge(TrapiBaseClass):
                         )
         elif trapi_version == '1.1':
             qedge.subject = edge_info.pop("subject")
+            qedge.meta_kg_validator.validate_entity(qedge.subject)
+
             qedge.object = edge_info.pop("object")
+            qedge.meta_kg_validator.validate_entity(qedge.object)
+            
             predicates = edge_info.pop("predicates", None)
+            qedge.meta_kg_validator.validate_predicates(predicates)
+            
+
             if predicates is not None:
                 qedge.set_predicates(predicates)
             qedge.relation = edge_info.pop("relation", None)
@@ -574,6 +587,9 @@ class QueryGraph(TrapiBaseClass):
         # Load Edges
         for edge_id, edge_info in query_graph["edges"].items():
             new_query_graph.edges[edge_id] = QEdge.load(trapi_version, biolink_version, edge_info)
+        
+        sp = SemanticProcessor(new_query_graph)
+        sp.process_biolink_subclasses()
         
         valid, message = new_query_graph.validate()
         if valid:

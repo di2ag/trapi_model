@@ -2,7 +2,7 @@ DEBUG = False
 
 import json
 import os
-
+from meta_kg_validator.meta_kg_validator import MetaKGValidator
 from trapi_model.exceptions import UnsupportedBiolinkVersion, UnknownBiolinkEntity
 
 
