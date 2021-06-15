@@ -16,7 +16,7 @@ class SemanticProcessor():
         
     def _process_nodes(self) -> list: 
         #get nodes
-        nodes = self.query_graph.message.query_graph.nodes
+        nodes = self.query_graph.nodes
         
         #loop through nodes, check for appropriate biolink category given id
         for node in nodes:
@@ -72,10 +72,10 @@ class SemanticProcessor():
     
     def _process_edges(self) -> list:
         #get eges
-        edges = self.query_graph.message.query_graph.edges
+        edges = self.query_graph.edges
 
         #get nodes
-        nodes = self.query_graph.message.query_graph.nodes
+        nodes = self.query_graph.nodes
 
         #loop through edges, check for appropriate biolink predicate given subject and object categories
         for edge in edges:
@@ -140,9 +140,9 @@ class SemanticProcessor():
     
     def _process_gene_wildcard_query(self):
         #get edges
-        edges = self.query_graph.message.query_graph.edges
+        edges = self.query_graph.edges
         #get nodes
-        nodes = self.query_graph.message.query_graph.nodes
+        nodes = self.query_graph.nodes
 
         for node in nodes:
             node_obj = nodes[node]
@@ -183,9 +183,9 @@ class SemanticProcessor():
     
     def _process_drug_wildcard_query(self):
         #get nodes
-        nodes = self.query_graph.message.query_graph.node
+        nodes = self.query_graph.node
         #get edgse
-        edges = self.query_graph.message.query_graph.edges
+        edges = self.query_graph.edges
         #loop through nodes and check for appropriate drug descendents
         for node in nodes:
             node_obj = nodes[node]
@@ -226,9 +226,9 @@ class SemanticProcessor():
     
     def _process_wildcard_proxy(self):
         #get eges
-        edges = self.query_graph.message.query_graph.edges
+        edges = self.query_graph.edges
         #get nodes
-        nodes = self.query_graph.message.query_graph.nodes
+        nodes = self.query_graph.nodes
 
         for node in nodes:
             node_obj = nodes[node]
