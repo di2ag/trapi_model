@@ -49,7 +49,7 @@ class SemanticProcessor():
                         if get_biolink_entity("biolink:Gene") not in node_obj.categories:
                             category_ancestory_found = False
                             for category in node_obj.categories:
-                                logger.note(category.passed_name)
+                                logger.note('\t',category.passed_name)
                                 descendants = self._biolink_category_descendent_lookup(category.passed_name)
                                 if "biolink:Gene" in descendants:
                                     category_ancestory_found = True
