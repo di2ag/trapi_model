@@ -125,5 +125,3 @@ class MetaKGValidator:
             return True
         else:
             raise UnsupportedNodeEdgeRelationship(subject, predicate, object)
-
-
