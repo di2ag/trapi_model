@@ -85,6 +85,7 @@ class SemanticProcessor():
 
         #get nodes
         nodes = self.query_graph.nodes
+        logger.note('foo'+ type(nodes))
 
         #loop through edges, check for appropriate biolink predicate given subject and object categories
         for edge in edges:
@@ -193,7 +194,7 @@ class SemanticProcessor():
     def _process_drug_wildcard_query(self):
         #get nodes
         nodes = self.query_graph.nodes
-        #get edgse
+        #get edges
         edges = self.query_graph.edges
         #loop through nodes and check for appropriate drug descendents
         for node in nodes:
