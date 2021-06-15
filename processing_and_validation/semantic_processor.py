@@ -192,7 +192,7 @@ class SemanticProcessor():
     
     def _process_drug_wildcard_query(self):
         #get nodes
-        nodes = self.query_graph.node
+        nodes = self.query_graph.nodes
         #get edgse
         edges = self.query_graph.edges
         #loop through nodes and check for appropriate drug descendents
