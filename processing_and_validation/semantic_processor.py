@@ -17,7 +17,7 @@ class SemanticProcessor():
     def __init__(self, query_graph: query_graph) -> None:
         self.query_graph = query_graph
 
-    def _biolink_category_descendent_lookup(biolinkCategory) -> json:
+    def _biolink_category_descendent_lookup(self, biolinkCategory) -> json:
             url = "https://bl-lookup-sri.renci.org/bl/"+biolinkCategory+"/descendants?version=latest"
             response = requests.get(url)
             return response.json()
