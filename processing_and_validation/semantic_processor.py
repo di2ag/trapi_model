@@ -239,6 +239,7 @@ class SemanticProcessor():
         edges = self.query_graph.edges
         #get nodes
         nodes = self.query_graph.nodes
+        logger.note('foo'+ str(type(nodes)))
 
         for node in nodes:
             node_obj = nodes[node]
