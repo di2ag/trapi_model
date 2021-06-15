@@ -28,6 +28,7 @@ setup(
         },
     include_package_data=True,
     install_requires=[
+        'linkml_model',
         'pyyaml>=5.1',
         'jsonschema',
         'bmt',
