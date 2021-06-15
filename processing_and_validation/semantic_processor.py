@@ -85,7 +85,7 @@ class SemanticProcessor():
 
         #get nodes
         nodes = self.query_graph.nodes
-        logger.note('foo'+ type(nodes))
+        logger.note('foo'+ str(type(nodes)))
 
         #loop through edges, check for appropriate biolink predicate given subject and object categories
         for edge in edges:
