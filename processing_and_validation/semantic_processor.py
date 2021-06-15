@@ -3,6 +3,14 @@ import json
 from trapi_model import query_graph
 from trapi_model.biolink.constants import get_biolink_entity
 from processing_and_validation.semantic_processor_exceptions import *
+import logging
+# Setup logging
+logging.addLevelName(25, "NOTE")
+# Add a special logging function
+def note(self, message, *args, **kwargs):
+    self._log(25, message, args, kwargs)
+logging.Logger.note = note
+logger = logging.getLogger(__name__)
 
 class SemanticProcessor():
     
@@ -41,6 +49,7 @@ class SemanticProcessor():
                         if get_biolink_entity("biolink:Gene") not in node_obj.categories:
                             category_ancestory_found = False
                             for category in node_obj.categories:
+                                logger.note(category.passed_name)
                                 descendants = self._biolink_category_descendent_lookup(category.passed_name)
                                 if "biolink:Gene" in descendants:
                                     category_ancestory_found = True
