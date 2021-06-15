@@ -169,11 +169,9 @@ class QNode(TrapiBaseClass):
             ids = node_info.pop("id", None)
             if ids is not None:
                 qnode.set_ids(ids)
-                qnode.meta_kg_validator.validate_prefixes(qnode.ids)
             categories = node_info.pop("category", None)
             if categories is not None:
                 qnode.set_categories(categories)
-                qnode.meta_kg_validator.validate_entities(qnode.set_categories)
             # Process constraints
             for name, constraint_info in node_info.items():
                 qnode.constraints.append(
@@ -189,11 +187,9 @@ class QNode(TrapiBaseClass):
             ids = node_info.pop("ids", None)
             if ids is not None:
                 qnode.set_ids(ids)
-                qnode.meta_kg_validator.validate_prefixes(qnode.ids)
             categories = node_info.pop("categories", None)
             if categories is not None:
                 qnode.set_categories(categories)
-                qnode.meta_kg_validator.validate_entities(qnode.categories)
             constraints = node_info.pop("constraints", None)
             if constraints is not None:
                 # Process constraints
@@ -349,13 +345,8 @@ class QEdge(TrapiBaseClass):
                         )
         elif trapi_version == '1.1':
             qedge.subject = edge_info.pop("subject")
-            qedge.meta_kg_validator.validate_entity(qedge.subject)
-
             qedge.object = edge_info.pop("object")
-            qedge.meta_kg_validator.validate_entity(qedge.object)
-            
             predicates = edge_info.pop("predicates", None)
-            qedge.meta_kg_validator.validate_predicates(predicates)
             
 
             if predicates is not None:
