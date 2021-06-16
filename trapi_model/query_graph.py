@@ -3,6 +3,7 @@ TRAPI Query Graph Data Classes
 """
 
 import json
+from processing_and_validation.meta_kg_validator import MetaKGValidator
 from jsonschema import ValidationError
 
 from trapi_model.biolink.constants import get_biolink_entity
@@ -581,6 +582,9 @@ class QueryGraph(TrapiBaseClass):
         
         sp = SemanticProcessor(new_query_graph)
         sp.process_biolink_subclasses()
+
+        mkgp = MetaKGValidator(new_query_graph)
+        mkgp.validate_graph()
         
         valid, message = new_query_graph.validate()
         if valid:

@@ -1,9 +1,10 @@
 from sys import prefix
+from trapi_model.query_graph import QEdge, QNode
 import requests
 from trapi_model.exceptions import UnsupportedNodeEdgeRelationship, UnsupportedPrefixEntityPair, UnsupportedPredicate, UnsupportedEntity, UnsupportedPrefix
 
 class MetaKGValidator:
-    def __init__(self) -> None:
+    def __init__(self, query_graph: query_graph) -> None:
         self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/mmeta_knowledge_graph/"
         self._get_meta_knowledge_graph()
         self._get_supported_entities()
@@ -11,6 +12,7 @@ class MetaKGValidator:
         self._get_supported_id_prefixes()
         self._get_supported_relationships()
         self._get_suppported_prefix_entitiy_pairs()
+        self.query_graph = query_graph
         
     def _get_meta_knowledge_graph(self) -> None:
         response = requests.get(self.meta_knowledge_graph_location)
@@ -31,7 +33,7 @@ class MetaKGValidator:
             supported_predicate = edge['predicate']
             self.supported_predicates.add(supported_predicate)
 
-    def _get_supported_id_prefixes(self) -> None:
+    def _get_supported_category_prefixes(self) -> None:
         self.supported_id_prefixes = set()
         for node_entity in self.meta_knowledge_graph['nodes']:
             for id_prefix in node_entity['id_prefixes']:
@@ -55,7 +57,7 @@ class MetaKGValidator:
             relationship = (subject, predicate, object)
             self.supported_relationships.add(relationship)
 
-    def _validate_prefixes(self, ids:list) -> bool:
+    def _validate_prefixes(self, ids:list[str]) -> bool:
         validated = True
         for id in ids:
             prefix = id[:':'-1]
@@ -67,7 +69,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPrefix(prefix)
 
-    def _validate_prefix_entity_pairs(self, ids:list, categories:list) -> bool:
+    def _validate_prefix_entity_pairs(self, ids:list[str], categories:list[str]) -> bool:
         validated = True
         for id in ids:
             prefix = id[:':'-1]
@@ -79,7 +81,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPrefixEntityPair
 
-    def _validate_predicate(self, predicates:list) -> bool:
+    def _validate_predicates(self, predicates:list[str]) -> bool:
         validated = True
 
         for predicate in predicates:
@@ -91,7 +93,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPredicate(predicate)
 
-    def _validate_entities(self, entities:list) -> bool:
+    def _validate_categories(self, entities:list[str]) -> bool:
         validated = False
         unsupported_entity = None
 
@@ -105,17 +107,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedEntity(unsupported_entity)
     
-    def _validate_entity(self, entity:str) -> bool:
-        validated = False
-        if entity in self.supported_entities:
-            validated = True
-
-        if validated:
-            return True
-        else:
-            raise UnsupportedEntity(entity)
-
-    def _validate_relationship(self, subject: str, predicate: str, object:str) -> bool:
+    def _validate_relationship(self, subject: str, predicate: list[str], object:str) -> bool:
         validated = True
         relationship = (subject, predicate, object)
         if relationship not in self.supported_relationships:
@@ -125,3 +117,25 @@ class MetaKGValidator:
             return True
         else:
             raise UnsupportedNodeEdgeRelationship(subject, predicate, object)
+
+    def _validate_nodes(self, nodes:list[QNode]):
+        for node in nodes:
+            ids = node.ids
+            self._validate_categories(ids)
+            categories = node.categories
+            self._validate_prefixes(categories)
+            self._validate_prefix_entity_pairs(ids,categories)
+
+    def _validate_edges(self, edges:list[QEdge]):
+        for edge in edges:
+            predicates = edge.predicates
+            self._validate_predicates(predicates)
+                
+
+    def validate_graph(self) -> None:
+        #get nodes
+        nodes = self.query_graph.nodes
+        self._validate_nodes(nodes)
+        #get edges
+        edges = self.query_graph.edges
+        self._validate_edges(edges)
