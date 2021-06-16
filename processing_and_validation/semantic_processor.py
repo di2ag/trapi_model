@@ -49,7 +49,6 @@ class SemanticProcessor():
                         if get_biolink_entity("biolink:Gene") not in node_obj.categories:
                             category_ancestory_found = False
                             for category in node_obj.categories:
-                                logger.note('\t'+category.passed_name)
                                 descendants = self._biolink_category_descendent_lookup(category.passed_name)
                                 if "biolink:Gene" in descendants:
                                     category_ancestory_found = True
@@ -85,7 +84,6 @@ class SemanticProcessor():
 
         #get nodes
         nodes = self.query_graph.nodes
-        logger.note('foo'+ str(type(nodes)))
 
         #loop through edges, check for appropriate biolink predicate given subject and object categories
         for edge in edges:
@@ -239,7 +237,6 @@ class SemanticProcessor():
         edges = self.query_graph.edges
         #get nodes
         nodes = self.query_graph.nodes
-        logger.note('foo'+ str(type(nodes)))
 
         for node in nodes:
             node_obj = nodes[node]
