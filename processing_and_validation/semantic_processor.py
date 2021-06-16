@@ -213,9 +213,9 @@ class SemanticProcessor():
                                 predicate_descendent_found = False
                                 for predicate in edge_obj.predicates:
                                     descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
-                                    if "biolink:gene_associated_with_condition" in descendants:
+                                    if "biolink:treats" in descendants:
                                         predicate_descendent_found = True
-                                        edge_obj.set_predicates("treats")
+                                        edge_obj.set_predicates("biolink:treats")
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if predicate_descendent_found == False:
