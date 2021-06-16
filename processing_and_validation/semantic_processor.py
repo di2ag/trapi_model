@@ -174,7 +174,7 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if preidcate_ancestor_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicate) 
+                                    raise UnsupportedPredicateAncestor(edge_obj.predicates) 
                             elif edge_obj.subject == node and "biolink:Drug" in object_categories_passed_names:
                                 preidcate_ancestor_found = False
                                 for predicate in edge_obj.predicates:
@@ -185,7 +185,7 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if preidcate_ancestor_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicate) 
+                                    raise UnsupportedPredicateAncestor(edge_obj.predicates) 
                 if category_ancestor_found == False:
                     raise UnsupportedCategoryAncestors(node_obj.categories)\
     
