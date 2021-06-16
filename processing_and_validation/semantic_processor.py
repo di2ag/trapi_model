@@ -202,6 +202,7 @@ class SemanticProcessor():
                 for category in node_obj.categories:
                     descendants = self._biolink_category_descendent_lookup(category.passed_name)
                     if "biolink:Drug" in descendants:
+                        category_descendent_found = True
                         node_obj.set_categories("biolink:Drug")
                         self.query_graph.nodes[node] = node_obj
                         for edge in edges:
