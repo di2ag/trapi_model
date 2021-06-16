@@ -291,7 +291,7 @@ class SemanticProcessor():
                             self.query_graph.nodes[node] = node_obj
                         #process the predicate    
                         predicate_descendent_found = False
-                        if "biolink:Drug" in [category.passed_name for category in nodes[edge.subject].categories] and "biolink:Disease" in [category.passed_name for category in nodes[edge.object].categories]:
+                        if "biolink:Drug" in [category.passed_name for category in nodes[edge_obj.subject].categories] and "biolink:Disease" in [category.passed_name for category in nodes[edge_obj.object].categories]:
                             for predicate in edge_obj.predicates:
                                 descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
                                 if "biolink:treats" in descendants:
