@@ -3,7 +3,7 @@ from trapi_model.biolink import BiolinkEntity
 class UnsupportedCategoryAncestors(Exception):
     def __init__(self, categories:list, message:str='Unsupported Category Ancestor') -> None:
         self.message = message
-        self.categories = [passed_name for category.passed_name in categories]
+        self.categories = [category.passed_name for category in categories]
 
         super().__init__(message)
 
@@ -13,7 +13,7 @@ class UnsupportedCategoryAncestors(Exception):
 class UnsupportedPredicateAncestor(Exception):
     def __init__(self, predicates:list, message:str = 'Unsupported Predicate Ancestor') -> None:
         self.message = message
-        self.predicate = [passed_name for predicate.passed_name in predicates]
+        self.predicate = [predicate.passed_name for predicate in predicates]
         super().__init__(message)
 
     def __str__(self) -> str:
@@ -22,7 +22,7 @@ class UnsupportedPredicateAncestor(Exception):
 class IndeterminableCategoryDescendent(Exception):
     def __init__(self, categories:list, message:str = 'Indeterminable Category Descendent') -> None:
         self.message = message
-        self.categories = [passed_name for category.passed_name in categories]
+        self.categories = [category.passed_name for category in categories]
         super().__init__(message)
     
     def __str__(self) -> str:
