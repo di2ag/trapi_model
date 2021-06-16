@@ -22,7 +22,7 @@ class UnsupportedPredicateAncestor(Exception):
 class IndeterminableCategoryDescendent(Exception):
     def __init__(self, categories:list, message:str = 'Indeterminable Category Descendent') -> None:
         self.message = message
-        self.categories = [passed_name for categories.passed_name in categories]
+        self.categories = [passed_name for category.passed_name in categories]
         super().__init__(message)
     
     def __str__(self) -> str:
