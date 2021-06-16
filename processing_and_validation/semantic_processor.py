@@ -182,7 +182,7 @@ class SemanticProcessor():
                                     if "biolink:interacts_with" in descendants:
                                         preidcate_ancestor_found = True
                                         edge_obj.set_predicates("biolink:interacts_with")
-                                        self.query_gra.query_graph.edges[edge] = edge_obj
+                                        self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if preidcate_ancestor_found == False:
                                     raise UnsupportedPredicateAncestor(edge_obj.predicate) 
