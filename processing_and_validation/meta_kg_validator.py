@@ -3,7 +3,7 @@ from processing_and_validation.meta_kg_exceptions import *
 
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:
-        self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/mmeta_knowledge_graph/"
+        self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
         self._get_meta_knowledge_graph()
         self._get_supported_entities()
         self._get_supported_predicates()
