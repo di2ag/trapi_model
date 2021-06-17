@@ -7,7 +7,7 @@ class MetaKGValidator:
         self._get_meta_knowledge_graph()
         self._get_supported_entities()
         self._get_supported_predicates()
-        self._get_supported_id_prefixes()
+        self._get_supported_category_prefixes()
         self._get_supported_relationships()
         self._get_suppported_prefix_entitiy_pairs()
         self.query_graph = query_graph
