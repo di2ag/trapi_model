@@ -8,4 +8,5 @@ meta_knowledge_graph = response.json()
 nodes = meta_knowledge_graph['nodes']
 
 for node in nodes:
-    print(nodes[node]['id_prefixes'])
+    print(node)
+    print(nodes[node])#['id_prefixes'])

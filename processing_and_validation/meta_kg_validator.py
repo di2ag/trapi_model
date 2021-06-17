@@ -1,5 +1,13 @@
 import requests
 from processing_and_validation.meta_kg_exceptions import *
+import logging
+# Setup logging
+logging.addLevelName(25, "NOTE")
+# Add a special logging function
+def note(self, message, *args, **kwargs):
+    self._log(25, message, args, kwargs)
+logging.Logger.note = note
+logger = logging.getLogger(__name__)
 
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:
@@ -33,8 +41,11 @@ class MetaKGValidator:
 
     def _get_supported_id_prefixes(self) -> None:
         self.supported_id_prefixes = set()
-        for node_category in self.meta_knowledge_graph['nodes']:
-            for id_prefix in self.meta_knowledge_graph['nodes'][node_category]['id_prefixes']:
+        nodes = self.meta_knowledge_graph['nodes']
+        for node_category in nodes:
+            logger.note(node_category)
+            logger.note(nodes[node_category]['id_prefixes'])
+            for id_prefix in nodes[node_category]['id_prefixes']:
                 self.supported_id_prefixes.add(id_prefix)
     
     def _get_suppported_prefix_entitiy_pairs(self) -> None:
