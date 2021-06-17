@@ -3,7 +3,6 @@ TRAPI Query Graph Data Classes
 """
 
 import json
-from processing_and_validation.meta_kg_validator import MetaKGValidator
 from jsonschema import ValidationError
 
 from trapi_model.biolink.constants import get_biolink_entity
@@ -732,6 +731,3 @@ class MetaKGValidator:
         #get edges
         edges = self.query_graph.edges
         self._validate_edges(edges)
-
-
-
