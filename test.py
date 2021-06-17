@@ -1,12 +1,82 @@
-import requests 
+from trapi_model.query_graph import QueryGraph
 
-meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
+qg ={
+            "nodes": {
+                        "n0": {
+                            "ids": [
+                                "MONDO:0007254"
+                            ],
+                            "categories": [
+                                "biolink:Disease"
+                            ],
+                            "constraints": []
+                        },
+                        "n1": {
+                            "ids": [
+                                "CHEMBL:CHEMBL3545252"
+                            ],
+                            "categories": [
+                                "biolink:Drug"
+                            ],
+                            "constraints": []
+                        },
+                        "n2": {
+                            "ids": [
+                                "EFO:0000714"
+                            ],
+                            "categories": [
+                                "biolink:PhenotypicFeature"
+                            ],
+                            "constraints": []
+                        },
+                        "n3": {
+                            "ids": None,
+                            "categories": [
+                                "biolink:Gene"
+                            ],
+                            "constraints": []
+                        }
+                    },
+                    "edges": {
+                        "e0": {
+                            "predicates": [
+                                "biolink:treats"
+                            ],
+                            "relation": None,
+                            "subject": "n1",
+                            "object": "n0",
+                            "constraints": []
+                        },
+                        "e1": {
+                            "predicates": [
+                                "biolink:has_phenotype"
+                            ],
+                            "relation": None,
+                            "subject": "n0",
+                            "object": "n2",
+                            "constraints": [
+                                {
+                                    "name": "survival_time",
+                                    "id": "EFO:0000714",
+                                    "operator": ">",
+                                    "value": 3736,
+                                    "unit_id": None,
+                                    "unit_name": None,
+                                    "not": False
+                                }
+                            ]
+                        },
+                        "e2": {
+                            "predicates": [
+                                "biolink:gene_associated_with_condition"
+                            ],
+                            "relation": None,
+                            "subject": "n3",
+                            "object": "n0",
+                            "constraints": []
+                        }
+                    }
+        }
 
-response = requests.get(meta_knowledge_graph_location)
-meta_knowledge_graph = response.json()
 
-nodes = meta_knowledge_graph['nodes']
-
-for node in nodes:
-    print(node)
-    print(nodes[node])#['id_prefixes'])
+tqg = QueryGraph.load(biolink_version=None, query_graph=qg, trapi_version='1.1')

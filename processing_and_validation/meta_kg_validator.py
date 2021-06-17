@@ -13,11 +13,11 @@ class MetaKGValidator:
     def __init__(self, query_graph) -> None:
         self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
         self._get_meta_knowledge_graph()
-        self._get_supported_entities()
+        self._get_supported_categories()
         self._get_supported_predicates()
         self._get_supported_id_prefixes()
         self._get_supported_relationships()
-        self._get_suppported_prefix_entitiy_pairs()
+        self._get_suppported_prefix_category_pairs()
         self.query_graph = query_graph
         
     def _get_meta_knowledge_graph(self) -> None:
@@ -25,19 +25,20 @@ class MetaKGValidator:
         meta_knowledge_graph = response.json()
         self.meta_knowledge_graph = meta_knowledge_graph
     
-    def _get_supported_entities(self) -> None:
-        self.supported_entities = set()
+    def _get_supported_categories(self) -> None:
+        self.supported_categories = set()
         for edge in self.meta_knowledge_graph['edges']:
             supported_subject = edge['subject']
             supported_object = edge['object']
-            self.supported_entities.add(supported_subject)
-            self.supported_entities.add(supported_object)
+            self.supported_categories.add(supported_subject)
+            self.supported_categories.add(supported_object)
 
     def _get_supported_predicates(self) -> None:
         self.supported_predicates = set()
         for edge in self.meta_knowledge_graph['edges']:
             supported_predicate = edge['predicate']
             self.supported_predicates.add(supported_predicate)
+        self.supported_predicates = list(self.supported_predicates)
 
     def _get_supported_id_prefixes(self) -> None:
         self.supported_id_prefixes = set()
@@ -45,13 +46,14 @@ class MetaKGValidator:
         for node_category in nodes:
             for id_prefix in nodes[node_category]['id_prefixes']:
                 self.supported_id_prefixes.add(id_prefix)
+        
     
-    def _get_suppported_prefix_entitiy_pairs(self) -> None:
-        self.supported_prefix_entity_pairs = dict()
-        nodeEntities = self.meta_knowledge_graph['nodes'].keys()
-        for node_category in nodeEntities:
+    def _get_suppported_prefix_category_pairs(self) -> None:
+        self.supported_prefix_category_pairs = dict()
+        nodeCategories = self.meta_knowledge_graph['nodes'].keys()
+        for node_category in nodeCategories:
             id_prefixes = self.meta_knowledge_graph['nodes'][node_category]['id_prefixes']
-            self.supported_predicates.update({node_category:id_prefixes})          
+            self.supported_prefix_category_pairs.update({node_category:id_prefixes})          
 
     def _get_supported_relationships(self) -> None:
         self.supported_relationships = set()
@@ -66,60 +68,63 @@ class MetaKGValidator:
 
     def _validate_prefixes(self, ids:list) -> bool:
         validated = True
-        for id in ids:
-            prefix = id[:':'-1]
-            if prefix not in self.supported_id_prefixes:
-                validated = False
+        if ids is not None:
+            for id in ids:
+                prefix = id[:id.index(':')]
+                if prefix not in self.supported_id_prefixes:
+                    validated = False
         
         if validated:
             return True
         else:
             raise UnsupportedPrefix(prefix)
 
-    def _validate_prefix_entity_pairs(self, ids:list, categories:list) -> bool:
+    def _validate_prefix_category_pairs(self, ids:list, categories:list) -> bool:
         validated = True
-        for id in ids:
-            prefix = id[:':'-1]
-            for category in categories:
-                if prefix not in self.supported_prefix_entity_pairs.get(category):
-                    validated = False
-        if validated:
-            return True
-        else:
-            raise UnsupportedPrefixEntityPair
+        if ids is not None:
+            for id in ids:
+                prefix = id[:id.index(':')]
+                passed_names = [category.passed_name for category in categories]
+                for passed_name in passed_names:
+                    if prefix not in self.supported_prefix_category_pairs.get(passed_name):
+                        validated = False
+            if validated:
+                return True
+            else:
+                raise UnsupportedPrefixCategoryPair
 
     def _validate_predicates(self, predicates:list) -> bool:
-        validated = True
-
-        for predicate in predicates:
-            if predicate in self.supported_predicates:
-                validated = False
+        validated = False
+        passed_names = [predicate.passed_name for predicate in predicates]
+        for passed_name in passed_names:
+            if passed_name in self.supported_predicates:
+                validated = True
         
         if validated:
             return True
         else:
-            raise UnsupportedPredicate(predicate)
+            raise UnsupportedPredicate(passed_names)
 
-    def _validate_categories(self, entities:list) -> bool:
+    def _validate_categories(self, categories:list) -> bool:
         validated = False
-        unsupported_entity = None
-
-        for entity in entities:
-            if entity in self.supported_entities:
+        unsupported_category = None
+        passed_names = [category.passed_name for category in categories]
+        for passed_name in passed_names:
+            if passed_name in self.supported_categories:
                 validated = True
             else:
-                unsupported_entity = entity
+                unsupported_category = passed_name
         if validated:
             return True
         else:
-            raise UnsupportedEntity(unsupported_entity)
+            raise UnsupportedCategory(unsupported_category)
     
     def _validate_relationship(self, subject: str, predicates: list, object:str) -> bool:
-        validated = True
+        validated = False
         for predicate in predicates:
             relationship = (subject, predicate, object)
             if relationship not in self.supported_relationships:
-                validated = False 
+                validated = True 
 
             if validated:
                 return True
@@ -128,18 +133,18 @@ class MetaKGValidator:
 
     def _validate_nodes(self, nodes:list):
         for node in nodes:
-            ids = node.ids
-            self._validate_categories(ids)
-            categories = node.categories
-            self._validate_prefixes(categories)
-            self._validate_prefix_entity_pairs(ids,categories)
+            ids = nodes[node].ids
+            self._validate_prefixes(ids)
+            categories = nodes[node].categories
+            self._validate_categories(categories)
+            self._validate_prefix_category_pairs(ids,categories)
 
     def _validate_edges(self, edges:list):
         for edge in edges:
-            predicates = edge.predicates
+            predicates = edges[edge].predicates
             self._validate_predicates(predicates)
-            subject = edge.subject
-            object = edge.object
+            subject = edges[edge].subject
+            object = edges[edge].object
             self._validate_relationship(subject,predicates,object)
 
     def validate_graph(self) -> None:
@@ -149,3 +154,5 @@ class MetaKGValidator:
         #get edges
         edges = self.query_graph.edges
         self._validate_edges(edges)
+
+

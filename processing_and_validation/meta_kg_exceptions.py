@@ -23,7 +23,7 @@ class UnsupportedPredicate(Exception):
     def __str__(self) -> str:
         return '{}: {}'.format(self.message, self.predicate)
 
-class UnsupportedEntity(Exception):
+class UnsupportedCategory(Exception):
     def __init__(self, entity:str, message:str='Unsupported Entity') -> None:
         self.message = message
         self.entity = entity
@@ -41,7 +41,7 @@ class UnsupportedPrefix(Exception):
     def __str__(self) -> str:
         return '{}: {}'.format(self.message, self.prefix)
 
-class UnsupportedPrefixEntityPair(Exception):
+class UnsupportedPrefixCategoryPair(Exception):
     def __init__(self, entity:str, prefix:str, message:str = 'Unsupported Prefix') -> None:
         self.entity = entity
         self.prefix = prefix
