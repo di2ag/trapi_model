@@ -27,7 +27,7 @@ class MetaKGValidator:
 
     def _get_supported_predicates(self) -> None:
         self.supported_predicates = set()
-        for edge in self.meta_knowledge_graph:
+        for edge in self.meta_knowledge_graph['edges']:
             supported_predicate = edge['predicate']
             self.supported_predicates.add(supported_predicate)
 
