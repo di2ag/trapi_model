@@ -43,17 +43,15 @@ class MetaKGValidator:
         self.supported_id_prefixes = set()
         nodes = self.meta_knowledge_graph['nodes']
         for node_category in nodes:
-            logger.note(node_category)
-            logger.note(nodes[node_category]['id_prefixes'])
             for id_prefix in nodes[node_category]['id_prefixes']:
                 self.supported_id_prefixes.add(id_prefix)
     
     def _get_suppported_prefix_entitiy_pairs(self) -> None:
         self.supported_prefix_entity_pairs = dict()
         nodeEntities = self.meta_knowledge_graph['nodes'].keys()
-        for nodeEntity in nodeEntities:
-            id_prefixes = self.meta_knowledge_graph[nodeEntity]['id_prefixes']
-            self.supported_predicates.update({nodeEntity:id_prefixes})          
+        for node_category in nodeEntities:
+            id_prefixes = self.meta_knowledge_graph['nodes'][node_category]['id_prefixes']
+            self.supported_predicates.update({node_category:id_prefixes})          
 
     def _get_supported_relationships(self) -> None:
         self.supported_relationships = set()
