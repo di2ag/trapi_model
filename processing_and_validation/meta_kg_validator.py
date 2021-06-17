@@ -14,7 +14,7 @@ class MetaKGValidator:
         
     def _get_meta_knowledge_graph(self) -> None:
         response = requests.get(self.meta_knowledge_graph_location)
-        meta_knowledge_graph = response.data
+        meta_knowledge_graph = response.json()
         self.meta_knowledge_graph = meta_knowledge_graph
     
     def _get_supported_entities(self) -> None:
