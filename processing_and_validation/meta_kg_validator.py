@@ -55,7 +55,7 @@ class MetaKGValidator:
             relationship = (subject, predicate, object)
             self.supported_relationships.add(relationship)
 
-    def _validate_prefixes(self, ids:list[str]) -> bool:
+    def _validate_prefixes(self, ids:list) -> bool:
         validated = True
         for id in ids:
             prefix = id[:':'-1]
@@ -67,7 +67,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPrefix(prefix)
 
-    def _validate_prefix_entity_pairs(self, ids:list[str], categories:list[str]) -> bool:
+    def _validate_prefix_entity_pairs(self, ids:list, categories:list) -> bool:
         validated = True
         for id in ids:
             prefix = id[:':'-1]
@@ -79,7 +79,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPrefixEntityPair
 
-    def _validate_predicates(self, predicates:list[str]) -> bool:
+    def _validate_predicates(self, predicates:list) -> bool:
         validated = True
 
         for predicate in predicates:
@@ -91,7 +91,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedPredicate(predicate)
 
-    def _validate_categories(self, entities:list[str]) -> bool:
+    def _validate_categories(self, entities:list) -> bool:
         validated = False
         unsupported_entity = None
 
@@ -105,7 +105,7 @@ class MetaKGValidator:
         else:
             raise UnsupportedEntity(unsupported_entity)
     
-    def _validate_relationship(self, subject: str, predicates: list[str], object:str) -> bool:
+    def _validate_relationship(self, subject: str, predicates: list, object:str) -> bool:
         validated = True
         for predicate in predicates:
             relationship = (subject, predicate, object)
