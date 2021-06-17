@@ -5,8 +5,7 @@ meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_
 response = requests.get(meta_knowledge_graph_location)
 meta_knowledge_graph = response.json()
 
-print(meta_knowledge_graph.keys())
-edges = meta_knowledge_graph['edges']
+nodes = meta_knowledge_graph['nodes']
 
-for edge in edges:
-    print(edge['predicate'])
+for node in nodes:
+    print(nodes[node]['id_prefixes'])

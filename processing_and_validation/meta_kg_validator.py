@@ -7,7 +7,7 @@ class MetaKGValidator:
         self._get_meta_knowledge_graph()
         self._get_supported_entities()
         self._get_supported_predicates()
-        self._get_supported_category_prefixes()
+        self._get_supported_id_prefixes()
         self._get_supported_relationships()
         self._get_suppported_prefix_entitiy_pairs()
         self.query_graph = query_graph
@@ -31,10 +31,10 @@ class MetaKGValidator:
             supported_predicate = edge['predicate']
             self.supported_predicates.add(supported_predicate)
 
-    def _get_supported_category_prefixes(self) -> None:
+    def _get_supported_id_prefixes(self) -> None:
         self.supported_id_prefixes = set()
-        for node_entity in self.meta_knowledge_graph['nodes']:
-            for id_prefix in node_entity['id_prefixes']:
+        for node_category in self.meta_knowledge_graph['nodes']:
+            for id_prefix in self.meta_knowledge_graph['nodes'][node_category]['id_prefixes']:
                 self.supported_id_prefixes.add(id_prefix)
     
     def _get_suppported_prefix_entitiy_pairs(self) -> None:
