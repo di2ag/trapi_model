@@ -12,7 +12,6 @@ from trapi_model.base import TrapiBaseClass
 from requests import request
 from reasoner_validator import validate_QEdge_1_0, validate_QEdge_1_1, \
 validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryGraph_1_1
-from trapi_model.exceptions import UnsupportedNodeEdgeRelationship, UnsupportedPrefixEntityPair, UnsupportedPredicate, UnsupportedEntity, UnsupportedPrefix
 
 from processing_and_validation.meta_kg_validator import MetaKGValidator
 from processing_and_validation.semantic_processor import SemanticProcessor
