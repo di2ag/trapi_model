@@ -100,7 +100,7 @@ class MetaKGValidator:
             if validated:
                 return True
             else:
-                raise UnsupportedPrefixCategoryPair(entity=passed_name, entity=prefix)
+                raise UnsupportedPrefixCategoryPair(entity=passed_name, prefix=prefix)
 
     def _validate_predicates(self, predicates:list) -> bool:
         validated = False
