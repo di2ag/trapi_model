@@ -43,7 +43,7 @@ class SemanticProcessor():
                                     category_ancestory_found = True
                                     node_obj.set_categories("biolink:Disease")
                             if category_ancestory_found == False:
-                                passed_names = [category.passed_name for category in categories]
+                                passed_names = [category.passed_name for category in node_obj.categories]
                     elif "ENSEMBL" in curie:
                         self.gene_nodes_found = True
                         if get_biolink_entity("biolink:Gene") not in node_obj.categories:
