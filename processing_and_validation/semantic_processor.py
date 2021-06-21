@@ -2,7 +2,7 @@ import requests
 import json
 from trapi_model import query_graph
 from trapi_model.biolink.constants import get_biolink_entity
-from processing_and_validation.processing_and_validation_exceptions.import *
+from processing_and_validation.processing_and_validation_exceptions import *
 import logging
 # Setup logging
 logging.addLevelName(25, "NOTE")
