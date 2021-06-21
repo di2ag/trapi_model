@@ -89,6 +89,8 @@ class MetaKGValidator:
     def _validate_prefix_category_pairs(self, ids:list, categories:list) -> bool:
         validated = True
         if ids is not None:
+            prefix = ""
+            passed_name = ""
             for id in ids:
                 prefix = id[:id.index(':')]
                 passed_names = [category.passed_name for category in categories]
@@ -98,7 +100,7 @@ class MetaKGValidator:
             if validated:
                 return True
             else:
-                raise UnsupportedPrefixCategoryPair
+                raise UnsupportedPrefixCategoryPair(entity=passed_name, entity=prefix)
 
     def _validate_predicates(self, predicates:list) -> bool:
         validated = False
