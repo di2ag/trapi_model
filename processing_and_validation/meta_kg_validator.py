@@ -22,11 +22,6 @@ class MetaKGValidator:
         self._get_suppported_prefix_category_pairs()
         self.query_graph = query_graph
 
-    def _biolink_category_descendent_lookup(self, biolinkCategory) -> json:
-            url = "https://bl-lookup-sri.renci.org/bl/"+biolinkCategory+"/descendants?version=latest"
-            response = requests.get(url)
-            return response.json()
-
     def _get_meta_knowledge_graph(self) -> None:
         response = requests.get(self.meta_knowledge_graph_location)
         meta_knowledge_graph = response.json()
@@ -74,12 +69,12 @@ class MetaKGValidator:
             self.supported_relationships.add(relationship)
 
     def _validate_prefixes(self, ids:list) -> bool:
-        validated = True
+        validated = False
         if ids is not None:
             for id in ids:
                 prefix = id[:id.index(':')]
                 if prefix not in self.supported_id_prefixes:
-                    validated = False
+                    validated = True
         
         if validated:
             return True
@@ -87,7 +82,7 @@ class MetaKGValidator:
             raise UnsupportedPrefix(prefix)
 
     def _validate_prefix_category_pairs(self, ids:list, categories:list) -> bool:
-        validated = True
+        validated = False
         if ids is not None:
             prefix = ""
             passed_name = ""
@@ -96,11 +91,11 @@ class MetaKGValidator:
                 passed_names = [category.passed_name for category in categories]
                 for passed_name in passed_names:
                     if prefix not in self.supported_prefix_category_pairs.get(passed_name):
-                        validated = False
-            if validated:
-                return True
-            else:
-                raise UnsupportedPrefixCategoryPair(entity=passed_name, prefix=prefix)
+                        validated = True
+        if validated:
+            return True
+        else:
+            raise UnsupportedPrefixCategoryPair(entity=passed_name, prefix=prefix)
 
     def _validate_predicates(self, predicates:list) -> bool:
         validated = False
