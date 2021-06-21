@@ -83,8 +83,6 @@ class MetaKGValidator:
 
     def _validate_prefix_category_pairs(self, ids:list, categories:list) -> bool:
         validated = True
-        print('soosdfsadf')
-        print(ids,[category.passed_name for category in categories])
         if ids is not None:
             prefix = ""
             passed_name = ""
@@ -130,7 +128,6 @@ class MetaKGValidator:
             for predicate in predicates:
                 for object in objects:
                     relationship = (subject.passed_name, predicate.passed_name, object.passed_name)
-                    print(relationship)
                     if relationship not in self.supported_relationships:
                         validated = False 
 
@@ -140,7 +137,6 @@ class MetaKGValidator:
             raise UnsupportedNodeEdgeRelationship(subject.passed_name, predicate.passed_name, object.passed_name)
 
     def _validate_nodes(self, nodes:list):
-        print('folsdf')
         for node in nodes:
             ids = nodes[node].ids
             self._validate_prefixes(ids)

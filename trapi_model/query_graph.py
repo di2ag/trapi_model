@@ -574,7 +574,7 @@ class QueryGraph(TrapiBaseClass):
     
     @staticmethod
     def load(trapi_version, biolink_version, query_graph):
-        print('soo')
+
         new_query_graph = QueryGraph(trapi_version, biolink_version)
         # Load Nodes
         for node_id, node_info in query_graph["nodes"].items():
