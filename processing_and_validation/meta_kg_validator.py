@@ -1,6 +1,7 @@
 import requests
 from processing_and_validation.meta_kg_exceptions import *
 import logging
+import json
 # Setup logging
 logging.addLevelName(25, "NOTE")
 # Add a special logging function
@@ -19,7 +20,12 @@ class MetaKGValidator:
         self._get_supported_relationships()
         self._get_suppported_prefix_category_pairs()
         self.query_graph = query_graph
-        
+
+    def _biolink_category_descendent_lookup(self, biolinkCategory) -> json:
+            url = "https://bl-lookup-sri.renci.org/bl/"+biolinkCategory+"/descendants?version=latest"
+            response = requests.get(url)
+            return response.json()
+
     def _get_meta_knowledge_graph(self) -> None:
         response = requests.get(self.meta_knowledge_graph_location)
         meta_knowledge_graph = response.json()
@@ -113,6 +119,8 @@ class MetaKGValidator:
             if passed_name in self.supported_categories:
                 validated = True
             else:
+                descendents = self._biolink_category_descendent_lookup(passed_name)
+                if 
                 unsupported_category = passed_name
         if validated:
             return True

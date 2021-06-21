@@ -50,3 +50,12 @@ class UnsupportedPrefixCategoryPair(Exception):
     
     def __str__(self) -> str:
         return '{}: {} -> {}'.format(self.message, self.prefix, self.entity)
+
+class IndeterminableCategoryDescendent(Exception):
+    def __init__(self, categories:list, message:str = 'Indeterminable Category Descendent') -> None:
+        self.message = message
+        self.categories = [category.passed_name for category in categories]
+        super().__init__(message)
+    
+    def __str__(self) -> str:
+        return '{}: {}'.format(self.message, self.categories)

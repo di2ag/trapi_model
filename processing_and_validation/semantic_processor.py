@@ -2,7 +2,7 @@ import requests
 import json
 from trapi_model import query_graph
 from trapi_model.biolink.constants import get_biolink_entity
-from processing_and_validation.semantic_processor_exceptions import *
+from processing_and_validation.processing_and_validation_exceptions.import *
 import logging
 # Setup logging
 logging.addLevelName(25, "NOTE")
@@ -43,7 +43,7 @@ class SemanticProcessor():
                                     category_ancestory_found = True
                                     node_obj.set_categories("biolink:Disease")
                             if category_ancestory_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                passed_names = [category.passed_name for category in categories]
                     elif "ENSEMBL" in curie:
                         self.gene_nodes_found = True
                         if get_biolink_entity("biolink:Gene") not in node_obj.categories:
@@ -54,7 +54,8 @@ class SemanticProcessor():
                                     category_ancestory_found = True
                                     node_obj.set_categories("biolink:Gene")
                             if category_ancestory_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                passed_names = [category.passed_name for category in node_obj.categories]
+                                raise UnsupportedCategory(passed_names)
                     elif "CHEMBL" in curie:
                         self.drug_nodes_found = True
                         category_ancestory_found = False
@@ -65,7 +66,8 @@ class SemanticProcessor():
                                     category_ancestory_found = True
                                     node_obj.set_categories("biolink:Drug")
                             if category_ancestory_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                passed_names = [category.passed_name for category in node_obj.categories]
+                                raise UnsupportedCategory(passed_names)
                     elif "EFO" in curie:
                         if get_biolink_entity("biolink:PhenotypicFeature") not in node_obj.categories:
                             category_ancestory_found = False
@@ -75,7 +77,8 @@ class SemanticProcessor():
                                     category_ancestory_found = True
                                     node_obj.set_categories("biolink:PhenotypicFeature")
                             if category_ancestory_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                passed_names = [category.passed_name for category in node_obj.categories]
+                                raise UnsupportedCategory(passed_names)
                 self.query_graph.nodes[node] = node_obj
     
     def _process_edges(self) -> list:
@@ -101,7 +104,8 @@ class SemanticProcessor():
                                         if "biolink:interacts_with" in descendants:
                                             edge_obj.set_predicates("biolink:interacts_with")
                                     if predicate_ancestor_found == False:
-                                            raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                        passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                        raise UnsupportedPredicate(passed_names)
                             if "MONDO" in object_id:
                                 if get_biolink_entity("biolink:gene_associated_with_condition") not in edge_obj.predicates:
                                     predicate_ancestor_found = False
@@ -111,7 +115,8 @@ class SemanticProcessor():
                                             predicate_ancestor_found = True
                                             edge_obj.set_predicates("biolink:gene_associated_with_condition")
                                     if predicate_ancestor_found == False:
-                                        raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                        passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                        raise UnsupportedPredicate(passed_names)
                         if "CHEMBL" in subject_id:
                             if "MONDO" in object_id:
                                 if get_biolink_entity("biolink:treats") not in edge_obj.predicates:
@@ -122,7 +127,8 @@ class SemanticProcessor():
                                             predicate_ancestor_found = True
                                             edge_obj.set_predicates("biolink:treats")
                                     if predicate_ancestor_found == False:
-                                        raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                        passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                        raise UnsupportedPredicate(passed_names)
                             if "ENSEMBL" in object_id:
                                 if get_biolink_entity("biolink:interacts_with") not in edge_obj.predicates:
                                     predicate_ancestor_found = False
@@ -132,7 +138,8 @@ class SemanticProcessor():
                                             predicate_ancestor_found = True
                                             edge_obj.set_predicates("biolink:interacts_with")
                                     if predicate_ancestor_found == False:
-                                        raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                        passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                        raise UnsupportedPredicate(passed_names)
                         if "MONDO" in subject_id:
                             if "EFO" in object_id:
                                 if get_biolink_entity("biolink:has_phenotype") not in edge_obj.predicates:
@@ -143,7 +150,8 @@ class SemanticProcessor():
                                             predicate_ancestor_found = True
                                             edge_obj.set_predicates("biolink:has_phenotype")
                                     if predicate_ancestor_found == False:
-                                        raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                        passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                        raise UnsupportedPredicate(passed_names)
                         self.query_graph.edges[edge] = edge_obj
     
     def _process_gene_wildcard_query(self):
@@ -175,7 +183,8 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if predicate_descendent_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicates) 
+                                    passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                    raise UnsupportedPredicate(passed_names)
                             elif edge_obj.subject == node and "biolink:Drug" in object_categories_passed_names:
                                 predicate_descendent_found = False
                                 for predicate in edge_obj.predicates:
@@ -186,9 +195,11 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if predicate_descendent_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicates) 
+                                    passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                    raise UnsupportedPredicate(passed_names)
                 if category_ancestor_found == False:
-                    raise UnsupportedCategoryAncestors(node_obj.categories)\
+                    passed_names = [category.passed_name for category in node_obj.categories]
+                    raise UnsupportedCategory(passed_names)
     
     def _process_drug_wildcard_query(self):
         #get nodes
@@ -219,7 +230,8 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if predicate_descendent_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                    passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                    raise UnsupportedPredicate(passed_names)
                             elif edge_obj.subject == node and "biolink:Gene" in object_categories_passed_names:
                                 predicate_descendent_found = False
                                 for predicate in edge_obj.predicates:
@@ -230,9 +242,11 @@ class SemanticProcessor():
                                         self.query_graph.edges[edge] = edge_obj
                                         continue
                                 if predicate_descendent_found == False:
-                                    raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                    passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                    raise UnsupportedPredicate(passed_names)
                 if category_descendent_found == False:
-                    raise UnsupportedCategoryAncestors(node_obj.categories)
+                    passed_names = [category.passed_name for category in node_obj.categories]
+                    raise UnsupportedCategory(passed_names)
                 continue
     
     def _process_wildcard_proxy(self):
@@ -259,7 +273,7 @@ class SemanticProcessor():
                                 if "biolink:Gene" in descendants:
                                     node_obj.set_categories("biolink:Gene")
                             if category_descendent_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                raise (node_obj.categories)
                             self.query_graph.nodes[node] = node_obj
                             
                         #drug wildcard by gene found in constraint
@@ -270,7 +284,8 @@ class SemanticProcessor():
                                     if "biolink:Drug" in descendants:
                                         node_obj.set_categories("biolink:Drug")
                             if category_descendent_found == False:
-                                raise UnsupportedCategoryAncestors(node_obj.categories)
+                                passed_names = [category.passed_name for category in node_obj.categories]
+                                raise UnsupportedCategory(passed_names)
                             self.query_graph.nodes[node] = node_obj
                             
                         else:
@@ -287,7 +302,8 @@ class SemanticProcessor():
                                 elif "biolink:Drug" in descendants and "biolink:Gene" in descendants:
                                     raise IndeterminableCategoryDescendent(node_obj.categories)
                                 elif "biolink:Drug" not in descendants and "biolink:Gene" not in descendants:
-                                    raise UnsupportedCategoryAncestors(node_obj.categories)
+                                    passed_names = [category.passed_name for category in node_obj.categories]
+                                    raise UnsupportedCategory(passed_names)
                             self.query_graph.nodes[node] = node_obj
                         #process the predicate    
                         predicate_descendent_found = False
@@ -299,7 +315,8 @@ class SemanticProcessor():
                                     edge_obj.set_predicates("biolink:treats")
                             #if no predicate descendent was found then raise an exception
                             if predicate_descendent_found == False:
-                                raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                raise UnsupportedPredicate(passed_names)
                         elif "biolink:Gene" in [category.passed_name for category in nodes[edge_obj.subject].categories] and "biolink:Disease" in [category.passed_name for category in nodes[edge_obj.object].categories]:
                             for predicate in edge_obj.predicates:
                                 descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
@@ -308,7 +325,8 @@ class SemanticProcessor():
                                     edge_obj.set_predicates("biolink:gene_associated_with_condition")
                             #if no predicate descendent was found then raise an exception
                             if predicate_descendent_found == False:
-                                raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                raise UnsupportedPredicate(passed_names)
                         elif "biolink:Gene" in [category.passed_name for category in nodes[edge_obj.subject].categories] and "biolink:Drug" in [category.passed_named for category in nodes[edge_obj.object].categories]:
                             for predicate in edge_obj.predicates:
                                 descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
@@ -317,7 +335,8 @@ class SemanticProcessor():
                                     edge_obj.set_predicates("biolink:interacts_with")
                             #if no predicate descendent was found then raise an exception                                    
                             if predicate_descendent_found == False:
-                                raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                raise UnsupportedPredicate(passed_names)
                         elif "biolink:Drug" in [category.passed_name for category in nodes[edge_obj.subject].categories] and "biolink:Gene" in [category.passed_name for category in nodes[edge_obj.object].categories]:
                             for predicate in edge_obj.predicates:
                                 descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
@@ -326,7 +345,8 @@ class SemanticProcessor():
                                     edge_obj.set_predicates("biolink:interacts_with")
                             #if no predicate descendent was found then raise an exception                                    
                             if predicate_descendent_found == False:
-                                raise UnsupportedPredicateAncestor(edge_obj.predicates)
+                                passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                raise UnsupportedPredicate(passed_names)
                         self.query_graph.edges[edge] = edge_obj
                         continue   
                 continue
