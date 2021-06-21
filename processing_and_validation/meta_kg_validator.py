@@ -69,12 +69,12 @@ class MetaKGValidator:
             self.supported_relationships.add(relationship)
 
     def _validate_prefixes(self, ids:list) -> bool:
-        validated = False
+        validated = True
         if ids is not None:
             for id in ids:
                 prefix = id[:id.index(':')]
                 if prefix not in self.supported_id_prefixes:
-                    validated = True
+                    validated = False
         
         if validated:
             return True
@@ -82,7 +82,9 @@ class MetaKGValidator:
             raise UnsupportedPrefix(prefix)
 
     def _validate_prefix_category_pairs(self, ids:list, categories:list) -> bool:
-        validated = False
+        validated = True
+        print('soosdfsadf')
+        print(ids,[category.passed_name for category in categories])
         if ids is not None:
             prefix = ""
             passed_name = ""
@@ -91,7 +93,7 @@ class MetaKGValidator:
                 passed_names = [category.passed_name for category in categories]
                 for passed_name in passed_names:
                     if prefix not in self.supported_prefix_category_pairs.get(passed_name):
-                        validated = True
+                        validated = False
         if validated:
             return True
         else:
@@ -122,33 +124,36 @@ class MetaKGValidator:
         else:
             raise UnsupportedCategory(passed_name)
     
-    def _validate_relationship(self, subject: str, predicates: list, object:str) -> bool:
-        validated = False
-        for predicate in predicates:
-            relationship = (subject, predicate, object)
-            if relationship not in self.supported_relationships:
-                validated = True 
+    def _validate_relationship(self, subjects: str, predicates: list, objects:str) -> bool:
+        validated = True
+        for subject in subjects:
+            for predicate in predicates:
+                for object in objects:
+                    relationship = (subject.passed_name, predicate.passed_name, object.passed_name)
+                    print(relationship)
+                    if relationship not in self.supported_relationships:
+                        validated = False 
 
-            if validated:
-                return True
-            else:
-                raise UnsupportedNodeEdgeRelationship(subject, predicate, object)
+        if validated:
+            return True
+        else:
+            raise UnsupportedNodeEdgeRelationship(subject.passed_name, predicate.passed_name, object.passed_name)
 
     def _validate_nodes(self, nodes:list):
+        print('folsdf')
         for node in nodes:
             ids = nodes[node].ids
             self._validate_prefixes(ids)
+
             categories = nodes[node].categories
             self._validate_categories(categories)
             self._validate_prefix_category_pairs(ids,categories)
 
-    def _validate_edges(self, edges:list):
+    def _validate_edges(self, edges:list, nodes:list):
         for edge in edges:
             predicates = edges[edge].predicates
             self._validate_predicates(predicates)
-            subject = edges[edge].subject
-            object = edges[edge].object
-            self._validate_relationship(subject,predicates,object)
+            
 
     def validate_graph(self) -> None:
         #get nodes
@@ -156,6 +161,9 @@ class MetaKGValidator:
         self._validate_nodes(nodes)
         #get edges
         edges = self.query_graph.edges
-        self._validate_edges(edges)
+        self._validate_edges(edges,nodes)
 
-
+        for edge in edges:
+            subjects = nodes.get(edges[edge].subject).categories
+            objects = nodes.get(edges[edge].object).categories
+            self._validate_relationship(subjects,edges[edge].predicates,objects)

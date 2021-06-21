@@ -1,5 +1,5 @@
 class UnsupportedNodeEdgeRelationship(Exception):
-    def __init__(self, biolink_entity_subject:str, biolink_entity_object:str, biolink_predicate:str, message:str='Unsupported Relationship') -> None:
+    def __init__(self, biolink_entity_subject:str,  biolink_predicate:str, biolink_entity_object:str, message:str='Unsupported Relationship') -> None:
         self.biolink_entity_subject = biolink_entity_subject
         self.biolink_entity_object = biolink_entity_object
         self.biolink_predicate = biolink_predicate

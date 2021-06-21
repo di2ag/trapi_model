@@ -4,6 +4,7 @@ TRAPI Query Graph Data Classes
 
 import json
 from jsonschema import ValidationError
+from trapi_model import exceptions
 
 from trapi_model.biolink.constants import get_biolink_entity
 from trapi_model.biolink import BiolinkEntity
@@ -573,6 +574,7 @@ class QueryGraph(TrapiBaseClass):
     
     @staticmethod
     def load(trapi_version, biolink_version, query_graph):
+        print('soo')
         new_query_graph = QueryGraph(trapi_version, biolink_version)
         # Load Nodes
         for node_id, node_info in query_graph["nodes"].items():
@@ -580,10 +582,13 @@ class QueryGraph(TrapiBaseClass):
         # Load Edges
         for edge_id, edge_info in query_graph["edges"].items():
             new_query_graph.edges[edge_id] = QEdge.load(trapi_version, biolink_version, edge_info)
+        try:
+            sp = SemanticProcessor(new_query_graph)
+            sp.process_biolink_subclasses()
+        except:
+            mkgp = MetaKGValidator(new_query_graph)
+            mkgp.validate_graph()
         
-        sp = SemanticProcessor(new_query_graph)
-        sp.process_biolink_subclasses()
-
         mkgp = MetaKGValidator(new_query_graph)
         mkgp.validate_graph()
         
