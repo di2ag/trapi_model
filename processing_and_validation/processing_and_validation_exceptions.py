@@ -42,7 +42,7 @@ class UnsupportedPrefix(Exception):
         return '{}: {}'.format(self.message, self.prefix)
 
 class UnsupportedPrefixCategoryPair(Exception):
-    def __init__(self, entity:str, prefix:str, message:str = 'Unsupported Prefix') -> None:
+    def __init__(self, entity:str, prefix:str, message:str = 'Unsupported Prefix Category Pair') -> None:
         self.entity = entity
         self.prefix = prefix
         self.message = message
