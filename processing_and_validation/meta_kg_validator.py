@@ -1,5 +1,6 @@
+from processing_and_validation.processing_and_validation_exceptions import UnsupportedCategory
 import requests
-from processing_and_validation.meta_kg_exceptions import *
+from processing_and_validation.processing_and_validation_exceptions import *
 import logging
 import json
 # Setup logging
@@ -113,19 +114,16 @@ class MetaKGValidator:
 
     def _validate_categories(self, categories:list) -> bool:
         validated = False
-        unsupported_category = None
         passed_names = [category.passed_name for category in categories]
         for passed_name in passed_names:
             if passed_name in self.supported_categories:
                 validated = True
             else:
-                descendents = self._biolink_category_descendent_lookup(passed_name)
-                if 
-                unsupported_category = passed_name
+                raise UnsupportedCategory(passed_name)
         if validated:
             return True
         else:
-            raise UnsupportedCategory(unsupported_category)
+            raise UnsupportedCategory(passed_name)
     
     def _validate_relationship(self, subject: str, predicates: list, object:str) -> bool:
         validated = False
