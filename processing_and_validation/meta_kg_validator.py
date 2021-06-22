@@ -1,6 +1,5 @@
-from processing_and_validation.processing_and_validation_exceptions import UnsupportedCategory
 import requests
-from processing_and_validation.processing_and_validation_exceptions import *
+from processing_and_validation.metakg_validation_exceptions import *
 import logging
 import json
 # Setup logging
