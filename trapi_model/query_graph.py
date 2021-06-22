@@ -1,8 +1,6 @@
 """
 TRAPI Query Graph Data Classes
 """
-
-import json
 from jsonschema import ValidationError
 from trapi_model import exceptions
 

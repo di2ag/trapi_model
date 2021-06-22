@@ -1,14 +1,5 @@
 import requests
 from processing_and_validation.metakg_validation_exceptions import *
-import logging
-import json
-# Setup logging
-logging.addLevelName(25, "NOTE")
-# Add a special logging function
-def note(self, message, *args, **kwargs):
-    self._log(25, message, args, kwargs)
-logging.Logger.note = note
-logger = logging.getLogger(__name__)
 
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:

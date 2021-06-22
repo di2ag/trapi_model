@@ -3,14 +3,6 @@ import json
 from trapi_model import query_graph
 from trapi_model.biolink.constants import get_biolink_entity
 from processing_and_validation.semantic_processor_exceptions import *
-import logging
-# Setup logging
-logging.addLevelName(25, "NOTE")
-# Add a special logging function
-def note(self, message, *args, **kwargs):
-    self._log(25, message, args, kwargs)
-logging.Logger.note = note
-logger = logging.getLogger(__name__)
 
 class SemanticProcessor():
     
