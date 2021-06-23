@@ -1,5 +1,3 @@
-from trapi_model.biolink import BiolinkEntity
-
 class UnsupportedCategoryAncestors(Exception):
     def __init__(self, categories:list, message:str='Unsupported Category Ancestor') -> None:
         self.message = message
