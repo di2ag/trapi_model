@@ -32,7 +32,6 @@ setup(
         'pyyaml>=5.1',
         'jsonschema',
         'bmt',
-        'linkml_model'
     ],
     zip_safe=False,
     python_requires='>=3.6',
