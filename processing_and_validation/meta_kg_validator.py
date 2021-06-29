@@ -1,6 +1,15 @@
 import requests
 from processing_and_validation.metakg_validation_exceptions import *
 
+import logging
+# Setup logging
+logging.addLevelName(25, "NOTE")
+# Add a special logging function
+def note(self, message, *args, **kwargs):
+    self._log(25, message, args, kwargs)
+logging.Logger.note = note
+logger = logging.getLogger(__name__)
+
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:
         self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
@@ -142,14 +151,19 @@ class MetaKGValidator:
             
 
     def validate_graph(self) -> None:
+        logger.note('validating nodes')
         #get nodes
         nodes = self.query_graph.nodes
         self._validate_nodes(nodes)
+        logger.note('nodes validated')
         #get edges
+        logger.note('validating edges')
         edges = self.query_graph.edges
         self._validate_edges(edges,nodes)
-
+        logger.note('validated edges')
+        logger.note('validating relationships')
         for edge in edges:
             subjects = nodes.get(edges[edge].subject).categories
             objects = nodes.get(edges[edge].object).categories
             self._validate_relationship(subjects,edges[edge].predicates,objects)
+            logger.note('validated relationships')
