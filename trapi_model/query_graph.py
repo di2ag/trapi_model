@@ -579,7 +579,7 @@ class QueryGraph(TrapiBaseClass):
             return False, ex.message
     
     @staticmethod
-    def load(trapi_version, biolink_version, query_graph):
+    def load(trapi_version, biolink_version, query_graph, metakg_validation=True, semantic_operations=True):
         logger.note('loading query graph')
         new_query_graph = QueryGraph(trapi_version, biolink_version)
         # Load Nodes
@@ -588,18 +588,21 @@ class QueryGraph(TrapiBaseClass):
         # Load Edges
         for edge_id, edge_info in query_graph["edges"].items():
             new_query_graph.edges[edge_id] = QEdge.load(trapi_version, biolink_version, edge_info)
-        try:
-            logger.note('processing sub classes')
-            sp = SemanticProcessor(new_query_graph)
-            sp.process_biolink_subclasses()
-            logger.note('processed')
-        except:
+        if semantic_operations == True:
+            try:
+                logger.note('processing sub classes')
+                sp = SemanticProcessor(new_query_graph)
+                sp.process_biolink_subclasses()
+                logger.note('processed')
+            except:
+                if metakg_validation:
+                    mkgp = MetaKGValidator(new_query_graph)
+                    mkgp.validate_graph()
+        if metakg_validation == True:        
+            logger.note('validating with meta kg')
             mkgp = MetaKGValidator(new_query_graph)
             mkgp.validate_graph()
-        logger.note('validating with meta kg')
-        mkgp = MetaKGValidator(new_query_graph)
-        mkgp.validate_graph()
-        logger.note('validated')
+            logger.note('validated')
         
         valid, message = new_query_graph.validate()
         if valid:

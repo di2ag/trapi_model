@@ -46,7 +46,7 @@ class Query(TrapiBaseClass):
             return False, ex.message
 
     @staticmethod
-    def load(trapi_version, biolink_version, query=None, query_filepath=None):
+    def load(trapi_version, biolink_version, query=None, query_filepath=None, metakgValidation=True, semanticOperations=True):
         if query is None and query_filepath is None:
             return ValueError('Message and Message filepath can not both be None.')
         if query_filepath is not None:

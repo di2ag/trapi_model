@@ -42,7 +42,7 @@ class Message(TrapiBaseClass):
             return False, ex.message
 
     @staticmethod
-    def load(trapi_version, biolink_version, message):
+    def load(trapi_version, biolink_version, message, metakgValidation=True, semanticOperations=True):
         new_message = Message(trapi_version, biolink_version)
         query_graph = message.pop("query_graph", None)
         knowledge_graph = message.pop("knowledge_graph", None)
