@@ -12,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:
+        logger.note('pinging metakg')
         self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
+        logger.note('pinged metakg')
         self._get_meta_knowledge_graph()
         self._get_supported_categories()
         self._get_supported_predicates()
