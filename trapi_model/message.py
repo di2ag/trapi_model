@@ -48,7 +48,7 @@ class Message(TrapiBaseClass):
         knowledge_graph = message.pop("knowledge_graph", None)
         results = message.pop("results", None)
         if query_graph is not None:
-            new_message.query_graph = QueryGraph.load(trapi_version, biolink_version, query_graph)
+            new_message.query_graph = QueryGraph.load(trapi_version, biolink_version, query_graph, metakgValidation=metakgValidation, semanticOperations=semanticOperations)
         if knowledge_graph is not None:
             new_message.knowledge_graph = KnowledgeGraph.load(trapi_version, biolink_version, knowledge_graph)
         if results is not None:
