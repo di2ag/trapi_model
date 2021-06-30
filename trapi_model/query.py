@@ -55,12 +55,14 @@ class Query(TrapiBaseClass):
             with open(query_filepath, 'r') as f_:
                 query = json.load(f_)
         new_query = Query(trapi_version, biolink_version)
-        message = query.pop("message", None,metakgValidation=metakgValidation, semanticOperations=semanticOperations)
+        message = query.pop("message", None)
         if message is not None:
             new_query.message = Message.load(
                     trapi_version,
                     biolink_version,
                     message=message,
+                    metakgValidation=metakgValidation, 
+                    semanticOperations=semanticOperations
                     )
         return new_query
 
