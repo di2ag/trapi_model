@@ -595,7 +595,7 @@ class QueryGraph(TrapiBaseClass):
                 sp.process_biolink_subclasses()
                 logger.note('processed')
             except:
-                if metakg_validation:
+                if metakg_validation == True:
                     mkgp = MetaKGValidator(new_query_graph)
                     mkgp.validate_graph()
         if metakg_validation == True:        
