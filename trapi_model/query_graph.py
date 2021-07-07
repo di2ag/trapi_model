@@ -14,6 +14,14 @@ validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryG
 
 from processing_and_validation.meta_kg_validator import MetaKGValidator
 from processing_and_validation.semantic_processor import SemanticProcessor
+import logging
+# Setup logging
+logging.addLevelName(25, "NOTE")
+# Add a special logging function
+def note(self, message, *args, **kwargs):
+    self._log(25, message, args, kwargs)
+logging.Logger.note = note
+logger = logging.getLogger(__name__)
 
 class QConstraintOrAdditionalProperty(TrapiBaseClass):
     def __init__(self,
@@ -572,7 +580,7 @@ class QueryGraph(TrapiBaseClass):
     
     @staticmethod
     def load(trapi_version, biolink_version, query_graph):
-
+        logger.note('loading query graph')
         new_query_graph = QueryGraph(trapi_version, biolink_version)
         # Load Nodes
         for node_id, node_info in query_graph["nodes"].items():
@@ -581,17 +589,21 @@ class QueryGraph(TrapiBaseClass):
         for edge_id, edge_info in query_graph["edges"].items():
             new_query_graph.edges[edge_id] = QEdge.load(trapi_version, biolink_version, edge_info)
         try:
+            logger.note('processing sub classes')
             sp = SemanticProcessor(new_query_graph)
             sp.process_biolink_subclasses()
+            logger.note('processed')
         except:
             mkgp = MetaKGValidator(new_query_graph)
             mkgp.validate_graph()
-        
+        logger.note('validating with meta kg')
         mkgp = MetaKGValidator(new_query_graph)
         mkgp.validate_graph()
+        logger.note('validated')
         
         valid, message = new_query_graph.validate()
         if valid:
+            logger.note('loading query graph')
             return new_query_graph
         else:
             raise InvalidTrapiComponent(trapi_version, 'QueryGraph', message)

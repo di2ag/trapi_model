@@ -1,10 +1,21 @@
 import requests
 from processing_and_validation.metakg_validation_exceptions import *
 
+import logging
+# Setup logging
+logging.addLevelName(25, "NOTE")
+# Add a special logging function
+def note(self, message, *args, **kwargs):
+    self._log(25, message, args, kwargs)
+logging.Logger.note = note
+logger = logging.getLogger(__name__)
+
 class MetaKGValidator:
     def __init__(self, query_graph) -> None:
+        logger.note('pinging metakg')
         self.meta_knowledge_graph_location = "http://chp.thayer.dartmouth.edu/meta_knowledge_graph/"
         self._get_meta_knowledge_graph()
+        logger.note('pinged metakg')
         self._get_supported_categories()
         self._get_supported_predicates()
         self._get_supported_id_prefixes()
@@ -13,10 +24,70 @@ class MetaKGValidator:
         self.query_graph = query_graph
 
     def _get_meta_knowledge_graph(self) -> None:
-        response = requests.get(self.meta_knowledge_graph_location)
-        meta_knowledge_graph = response.json()
-        self.meta_knowledge_graph = meta_knowledge_graph
-    
+        #response = requests.get(self.meta_knowledge_graph_location)
+        #meta_knowledge_graph = response.json()
+        self.meta_knowledge_graph = {
+            "nodes": {
+                "biolink:Gene": {
+                    "id_prefixes": [
+                        "ENSEMBL"
+                    ]
+                },
+                "biolink:Drug": {
+                    "id_prefixes": [
+                        "CHEMBL"
+                    ]
+                },
+                "biolink:Disease": {
+                    "id_prefixes": [
+                        "MONDO"
+                    ]
+                },
+                "biolink:PhenotypicFeature": {
+                    "id_prefixes": [
+                        "EFO"
+                    ]
+                }
+            },
+            "edges": [
+                {
+                    "subject": "biolink:Gene",
+                    "predicate": "biolink:gene_associated_with_condition",
+                    "object": "biolink:Disease"
+                },
+                {
+                    "subject": "biolink:Gene",
+                    "predicate": "biolink:interacts_with",
+                    "object": "biolink:Drug"
+                },
+                {
+                    "subject": "biolink:Drug",
+                    "predicate": "biolink:treats",
+                    "object": "biolink:Disease"
+                },
+                {
+                    "subject": "biolink:Drug",
+                    "predicate": "biolink:interacts_with",
+                    "object": "biolink:Gene"
+                },
+                {
+                    "subject": "biolink:Disease",
+                    "predicate": "biolink:has_phenotype",
+                    "object": "biolink:PhenotypicFeature"
+                },
+                {
+                    "subject": "biolink:Disease",
+                    "object": "biolink:Gene",
+                    "predicate": "biolink:condition_associated_with_gene"
+                },
+                {
+                    "subject": "biolink:PhenotypicFeature",
+                    "object": "biolink:Disease",
+                    "predicate": "biolink:phenotype_of"
+                }
+            ]
+        }
+
     def _get_supported_categories(self) -> None:
         self.supported_categories = set()
         for edge in self.meta_knowledge_graph['edges']:
@@ -142,14 +213,19 @@ class MetaKGValidator:
             
 
     def validate_graph(self) -> None:
+        logger.note('validating nodes')
         #get nodes
         nodes = self.query_graph.nodes
         self._validate_nodes(nodes)
+        logger.note('nodes validated')
         #get edges
+        logger.note('validating edges')
         edges = self.query_graph.edges
         self._validate_edges(edges,nodes)
-
+        logger.note('validated edges')
+        logger.note('validating relationships')
         for edge in edges:
             subjects = nodes.get(edges[edge].subject).categories
             objects = nodes.get(edges[edge].object).categories
             self._validate_relationship(subjects,edges[edge].predicates,objects)
+            logger.note('validated relationships')
