@@ -30,7 +30,7 @@ class Query(TrapiBaseClass):
                 "max_results": self.max_results,
                 "trapi_version": self.trapi_version,
                 "biolink_version": self.biolink_version,
-                "logs": logger.to_dict(),
+                "logs": self.logger.to_dict(),
                 "pk": self.id,
                 }
     
