@@ -1,5 +1,5 @@
 import requests
-from processing_and_validation.metakg_validation_exceptions import *
+from trapi_model.processing_and_validation.metakg_validation_exceptions import *
 
 import logging
 # Setup logging
