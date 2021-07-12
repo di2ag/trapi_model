@@ -10,7 +10,7 @@ from reasoner_validator import validate_Query_1_0, validate_Query_1_1
 
 from trapi_model.base import TrapiBaseClass
 from trapi_model.message import Message
-
+from trapi_model.logger import Logger
 
 class Query(TrapiBaseClass):
     def __init__(self, trapi_version='1.1', biolink_version=None, max_results=10, q_id=None):
@@ -18,6 +18,7 @@ class Query(TrapiBaseClass):
         self.biolink_version = biolink_version
         self.message = Message(trapi_version, biolink_version)
         self.max_results = max_results
+        self.logger = Logger()
         self.id = q_id
         if q_id is None:
             self.id = str(uuid.uuid4())
@@ -29,8 +30,21 @@ class Query(TrapiBaseClass):
                 "max_results": self.max_results,
                 "trapi_version": self.trapi_version,
                 "biolink_version": self.biolink_version,
+                "logs": self.logger.to_dict(),
                 "pk": self.id,
                 }
+    
+    def info(self, message, code=None):
+        self.logger.info(message, code)
+    
+    def debug(self, message, code=None):
+        self.logger.debug(message, code)
+    
+    def warning(self, message, code=None):
+        self.logger.warning(message, code)
+    
+    def error(self, message, code=None):
+        self.logger.error(message, code)
 
     def validate(self):
         _dict = self.to_dict()

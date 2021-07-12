@@ -12,7 +12,7 @@ class TrapiBaseClass:
 
     def json(self, filename=None):
         if filename is None:
-            return json.dumps(self.to_dict())
+            return json.dumps(self.to_dict(), indent=2)
         else:
             with open(filename, 'w') as json_file:
                 json.dump(self.to_dict(), json_file)
