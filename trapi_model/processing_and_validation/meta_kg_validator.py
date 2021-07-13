@@ -67,6 +67,11 @@ class MetaKGValidator:
     },
     {
       "subject": "biolink:Drug",
+      "object": "biolink:Gene",
+      "predicate": "biolink:interacts_with"
+    },
+    {
+      "subject": "biolink:Drug",
       "object": "biolink:Disease",
       "predicate": "biolink:treats"
     },
@@ -79,6 +84,11 @@ class MetaKGValidator:
       "subject": "biolink:Disease",
       "object": "biolink:PhenotypicFeature",
       "predicate": "biolink:has_phenotype"
+    },
+    {
+      "subject": "biolink:PhenotypicFeature",
+      "object": "biolink:Disease",
+      "predicate": "biolink:phenotype_of"
     },
     {
       "subject": "biolink:Gene",
@@ -109,10 +119,14 @@ class MetaKGValidator:
       "subject": "biolink:PhenotypicFeature",
       "object": "biolink:Disease",
       "predicate": "biolink:phenotype_of"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:PhenotypicFeature",
+      "predicate": "biolink:has_phenotype"
     }
   ]
 }
-
     def _get_supported_categories(self) -> None:
         self.supported_categories = set()
         for edge in self.meta_knowledge_graph['edges']:
