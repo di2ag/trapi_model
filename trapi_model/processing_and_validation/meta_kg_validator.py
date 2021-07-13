@@ -27,66 +27,91 @@ class MetaKGValidator:
         #response = requests.get(self.meta_knowledge_graph_location)
         #meta_knowledge_graph = response.json()
         self.meta_knowledge_graph = {
-            "nodes": {
-                "biolink:Gene": {
-                    "id_prefixes": [
-                        "ENSEMBL"
-                    ]
-                },
-                "biolink:Drug": {
-                    "id_prefixes": [
-                        "CHEMBL"
-                    ]
-                },
-                "biolink:Disease": {
-                    "id_prefixes": [
-                        "MONDO"
-                    ]
-                },
-                "biolink:PhenotypicFeature": {
-                    "id_prefixes": [
-                        "EFO"
-                    ]
-                }
-            },
-            "edges": [
-                {
-                    "subject": "biolink:Gene",
-                    "predicate": "biolink:gene_associated_with_condition",
-                    "object": "biolink:Disease"
-                },
-                {
-                    "subject": "biolink:Gene",
-                    "predicate": "biolink:interacts_with",
-                    "object": "biolink:Drug"
-                },
-                {
-                    "subject": "biolink:Drug",
-                    "predicate": "biolink:treats",
-                    "object": "biolink:Disease"
-                },
-                {
-                    "subject": "biolink:Drug",
-                    "predicate": "biolink:interacts_with",
-                    "object": "biolink:Gene"
-                },
-                {
-                    "subject": "biolink:Disease",
-                    "predicate": "biolink:has_phenotype",
-                    "object": "biolink:PhenotypicFeature"
-                },
-                {
-                    "subject": "biolink:Disease",
-                    "object": "biolink:Gene",
-                    "predicate": "biolink:condition_associated_with_gene"
-                },
-                {
-                    "subject": "biolink:PhenotypicFeature",
-                    "object": "biolink:Disease",
-                    "predicate": "biolink:phenotype_of"
-                }
-            ]
-        }
+  "nodes": {
+    "biolink:Gene": {
+      "id_prefixes": [
+        "ENSEMBL"
+      ]
+    },
+    "biolink:Drug": {
+      "id_prefixes": [
+        "CHEMBL"
+      ]
+    },
+    "biolink:Disease": {
+      "id_prefixes": [
+        "MONDO"
+      ]
+    },
+    "biolink:PhenotypicFeature": {
+      "id_prefixes": [
+        "EFO"
+      ]
+    }
+  },
+  "edges": [
+    {
+      "subject": "biolink:Gene",
+      "object": "biolink:Disease",
+      "predicate": "biolink:gene_associated_with_condition"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:Gene",
+      "predicate": "biolink:condition_associated_with_gene"
+    },
+    {
+      "subject": "biolink:Gene",
+      "object": "biolink:Drug",
+      "predicate": "biolink:interacts_with"
+    },
+    {
+      "subject": "biolink:Drug",
+      "object": "biolink:Disease",
+      "predicate": "biolink:treats"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:Drug",
+      "predicate": "biolink:treated_by"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:PhenotypicFeature",
+      "predicate": "biolink:has_phenotype"
+    },
+    {
+      "subject": "biolink:Gene",
+      "object": "biolink:Gene",
+      "predicate": "biolink:genetically_interacts_with"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:Gene",
+      "predicate": "biolink:condition_associated_with_gene"
+    },
+    {
+      "subject": "biolink:Gene",
+      "object": "biolink:Disease",
+      "predicate": "biolink:gene_associated_with_condition"
+    },
+    {
+      "subject": "biolink:Disease",
+      "object": "biolink:Drug",
+      "predicate": "biolink:treated_by"
+    },
+    {
+      "subject": "biolink:Drug",
+      "object": "biolink:Disease",
+      "predicate": "biolink:treats"
+    },
+    {
+      "subject": "biolink:PhenotypicFeature",
+      "object": "biolink:Disease",
+      "predicate": "biolink:phenotype_of"
+    }
+  ]
+}
 
     def _get_supported_categories(self) -> None:
         self.supported_categories = set()
