@@ -173,6 +173,7 @@ class QNode(TrapiBaseClass):
 
     @staticmethod
     def load(trapi_version, biolink_version, node_info):
+        qnode = None
         if trapi_version == '1.0':
             qnode = QNode(trapi_version, biolink_version)
             ids = node_info.pop("id", None)
