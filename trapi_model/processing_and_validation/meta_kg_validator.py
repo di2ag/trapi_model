@@ -35,7 +35,7 @@ class MetaKGValidator:
     },
     "biolink:Drug": {
       "id_prefixes": [
-        "CHEMBL"
+        "CHEMBL.COMPOUND"
       ]
     },
     "biolink:Disease": {
