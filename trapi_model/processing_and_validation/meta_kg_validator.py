@@ -95,36 +95,6 @@ class MetaKGValidator:
       "object": "biolink:Gene",
       "predicate": "biolink:genetically_interacts_with"
     },
-    {
-      "subject": "biolink:Disease",
-      "object": "biolink:Gene",
-      "predicate": "biolink:condition_associated_with_gene"
-    },
-    {
-      "subject": "biolink:Gene",
-      "object": "biolink:Disease",
-      "predicate": "biolink:gene_associated_with_condition"
-    },
-    {
-      "subject": "biolink:Disease",
-      "object": "biolink:Drug",
-      "predicate": "biolink:treated_by"
-    },
-    {
-      "subject": "biolink:Drug",
-      "object": "biolink:Disease",
-      "predicate": "biolink:treats"
-    },
-    {
-      "subject": "biolink:PhenotypicFeature",
-      "object": "biolink:Disease",
-      "predicate": "biolink:phenotype_of"
-    },
-    {
-      "subject": "biolink:Disease",
-      "object": "biolink:PhenotypicFeature",
-      "predicate": "biolink:has_phenotype"
-    }
   ]
 }
     def _get_supported_categories(self) -> None:
