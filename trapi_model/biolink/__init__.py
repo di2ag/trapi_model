@@ -46,6 +46,7 @@ class BiolinkEntity:
             is_predicate=False,
             inverse=None,
             ancestors=None,
+            descendants=None,
             ):
         if biolink_version is None:
             self.biolink_version = BIOLINK_VERSION
@@ -59,6 +60,7 @@ class BiolinkEntity:
         self.passed_name = name
         self.is_predicate = is_predicate
         self.ancestors = ancestors
+        self.descendants = descendants
         self.inverse = inverse
         if not BIOLINK_DEBUG:
             self.element = TOOLKIT.get_element(name)
@@ -68,6 +70,7 @@ class BiolinkEntity:
             if TOOLKIT.has_inverse(self.element.name):
                 self.inverse = self.element.inverse
             self.ancestors = TOOLKIT.get_ancestors(self.element.name)
+            self.descendants = TOOLKIT.get_descendants(self.element.name)
 
     def get_inverse(self):
         if BIOLINK_DEBUG:
@@ -117,6 +120,31 @@ class BiolinkEntity:
                     continue
                 ancestors.append(BiolinkEntity(ancestor))
             return ancestors
+
+    def get_descendants(self):
+        if BIOLINK_DEBUG:
+            logger.warning('In debug mode, decedents might be unstable.')
+            descendants = []
+            for i, descendant in enumerate(self.descendants):
+                if descendant == self.passed_name:
+                    continue
+                descendants.append(
+                        BiolinkEntity(
+                            descendant,
+                            is_predicate=self.is_predicate,
+                            descendants=descendants[i:],
+                            )
+                        )
+            return descendants
+        elif self.descendants is None:
+            return self.descendants
+        else:
+            descendants = [] 
+            for descendant in self.descendants:
+                if descendant == self.element.name:
+                    continue
+                descendants.append(BiolinkEntity(descendant))
+            return descendants
 
     def _depreciate_get_toolkit(self, biolink_version):
         if biolink_version is None:
