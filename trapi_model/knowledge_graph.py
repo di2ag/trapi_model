@@ -80,7 +80,7 @@ class Attribute(TrapiBaseClass):
                     original_attribute_name=attribute_info.pop("original_attribute_name", None),
                     attribute_source=attribute_info.pop("attribute_source", None),
                     value_url=attribute_info.pop("value_url", None),
-                    description=attribute_info("description", None),
+                    description=attribute_info.pop("description", None),
                     )
         return attribute
 

@@ -2,7 +2,7 @@ import requests
 import json
 from trapi_model import query_graph
 from trapi_model.biolink.constants import get_biolink_entity
-from processing_and_validation.semantic_processor_exceptions import *
+from trapi_model.processing_and_validation.semantic_processor_exceptions import *
 
 class SemanticProcessor():
     
@@ -189,6 +189,19 @@ class SemanticProcessor():
                                 if predicate_descendent_found == False:
                                     passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
                                     raise UnsupportedPredicateAncestor(passed_names)
+                            elif edge_obj.subject == node and "biolink:Gene" in object_categories_passed_names:
+                                predicate_descendent_found = False
+                                for predicate in edge_obj.predicates:
+                                    descendants = self._biolink_category_descendent_lookup(predicate.passed_name)
+                                    if "biolink:genetically_interacts_with" in descendants:
+                                        predicate_descendent_found = True
+                                        edge_obj.set_predicates("biolink:genetically_interacts_with")
+                                        self.query_graph.edges[edge] = edge_obj
+                                        continue
+                                if predicate_descendent_found == False:
+                                    passed_names = [predicate.passed_name for predicate in edge_obj.predicates]
+                                    raise UnsupportedCategoryAncestors(passed_names)
+
                 if category_ancestor_found == False:
                     passed_names = [category.passed_name for category in node_obj.categories]
                     raise UnsupportedCategoryAncestors(passed_names)
