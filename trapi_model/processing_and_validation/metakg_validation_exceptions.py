@@ -30,7 +30,7 @@ class UnsupportedCategory(Exception):
         super().__init__(self.message)
 
     def __str__(self) -> str:
-        return '{}: {}'.format(self.message)
+        return '{}: {}'.format(self.message, self.entity)
 
 class UnsupportedPrefix(Exception):
     def __init__(self, prefix:str, message:str='Unsupported Prefix') -> None:
