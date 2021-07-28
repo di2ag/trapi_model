@@ -1,4 +1,3 @@
 pyyaml
 jsonschema
 bmt
-git+git://github.com/di2ag/reasoner-validator@master#egg=reasoner-validator
