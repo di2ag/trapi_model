@@ -34,6 +34,9 @@ class Query(TrapiBaseClass):
                 "pk": self.id,
                 }
     
+    def find_and_replace(self, old_value, new_value):
+        self.message = self.message.find_and_replace(old_value, new_value)
+    
     def info(self, message, code=None):
         self.logger.info(message, code)
     
