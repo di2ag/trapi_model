@@ -19,8 +19,7 @@ setup(
         'trapi_model.data.biolink_schemas',
         'trapi_model.data.trapi_schemas',
         'trapi_model.biolink',
-        'trapi_model.biolink.constants',
-        'trapi_model.processing_and_validation'
+        'trapi_model.biolink.constants'
         ],
     package_data={
         'trapi_model.data.biolink_schemas': ['*.yaml', '*.yml'],
