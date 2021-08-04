@@ -5,7 +5,6 @@ import copy
 import itertools
 from collections import defaultdict
 
-from chp_utils.generic import dict_find_and_replace
 from reasoner_validator import validate_Message_1_0, validate_Message_1_1
 
 from trapi_model.base import TrapiBaseClass
@@ -28,11 +27,6 @@ class Message(TrapiBaseClass):
                 "knowledge_graph": self.knowledge_graph.to_dict(),
                 "results": self.results.to_dict(),
                 }
-
-    def find_and_replace(self, old_value, new_value):
-        message_dict = self.to_dict()
-        replaced_message_dict = dict_find_and_replace(message_dict, old_value, new_value)
-        return Message.load(self.trapi_version, self.biolink_version, replaced_message_dict)
 
     def validate(self):
         _dict = self.to_dict()
