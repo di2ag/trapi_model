@@ -12,8 +12,8 @@ from requests import request
 from reasoner_validator import validate_QEdge_1_0, validate_QEdge_1_1, \
 validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryGraph_1_1
 
-from trapi_model.processing_and_validation.meta_kg_validator import MetaKGValidator
-from trapi_model.processing_and_validation.semantic_processor import SemanticProcessor
+#from trapi_model.processing_and_validation.meta_kg_validator import MetaKGValidator
+#from trapi_model.processing_and_validation.semantic_processor import SemanticProcessor
 
 import logging
 # Setup logging
@@ -581,7 +581,7 @@ class QueryGraph(TrapiBaseClass):
     
     @staticmethod
     def load(trapi_version, biolink_version, query_graph):
-        logger.note('loading query graph')
+        #logger.note('loading query graph')
         new_query_graph = QueryGraph(trapi_version, biolink_version)
         # Load Nodes
         for node_id, node_info in query_graph["nodes"].items():
@@ -589,6 +589,7 @@ class QueryGraph(TrapiBaseClass):
         # Load Edges
         for edge_id, edge_info in query_graph["edges"].items():
             new_query_graph.edges[edge_id] = QEdge.load(trapi_version, biolink_version, edge_info)
+        '''
         try:
             logger.note('processing sub classes')
             sp = SemanticProcessor(new_query_graph)
@@ -601,10 +602,10 @@ class QueryGraph(TrapiBaseClass):
         mkgp = MetaKGValidator(new_query_graph)
         mkgp.validate_graph()
         logger.note('validated')
-        
+        '''
         valid, message = new_query_graph.validate()
         if valid:
-            logger.note('loading query graph')
+            #logger.note('loading query graph')
             return new_query_graph
         else:
             raise InvalidTrapiComponent(trapi_version, 'QueryGraph', message)
