@@ -72,6 +72,7 @@ class Query(TrapiBaseClass):
             with open(query_filepath, 'r') as f_:
                 query = json.load(f_)
         new_query = Query(trapi_version, biolink_version)
+        # Load messages
         message = query.pop("message", None)
         if message is not None:
             new_query.message = Message.load(
@@ -79,6 +80,12 @@ class Query(TrapiBaseClass):
                     biolink_version,
                     message=message,
                     )
+        # Load logs
+        logs = query.pop("logs", None)
+        if logs is not None and len(logs) > 0:
+            new_query.logger.add_logs(logs)
+        # Specify max results
+        new_query.max_results = query.pop("max_results", 10)
         return new_query
 
     def is_batch_query(self):
