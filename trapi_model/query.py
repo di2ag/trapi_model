@@ -20,6 +20,8 @@ class Query(TrapiBaseClass):
         self.max_results = max_results
         self.logger = Logger()
         self.id = q_id
+        self.status = None
+        self.description = None
         if q_id is None:
             self.id = str(uuid.uuid4())
         super().__init__(trapi_version, biolink_version)
@@ -31,8 +33,13 @@ class Query(TrapiBaseClass):
                 "trapi_version": self.trapi_version,
                 "biolink_version": self.biolink_version,
                 "logs": self.logger.to_dict(),
-                "pk": self.id,
+                "id": self.id,
+                "status": self.status,
+                "description": self.description,
                 }
+    
+    def find_and_replace(self, old_value, new_value):
+        self.message = self.message.find_and_replace(old_value, new_value)
     
     def info(self, message, code=None):
         self.logger.info(message, code)
@@ -45,6 +52,12 @@ class Query(TrapiBaseClass):
     
     def error(self, message, code=None):
         self.logger.error(message, code)
+
+    def set_status(self, message):
+        self.status = message
+
+    def set_description(self, message):
+        self.description = message
 
     def validate(self):
         _dict = self.to_dict()
@@ -69,6 +82,7 @@ class Query(TrapiBaseClass):
             with open(query_filepath, 'r') as f_:
                 query = json.load(f_)
         new_query = Query(trapi_version, biolink_version)
+        # Load messages
         message = query.pop("message", None)
         if message is not None:
             new_query.message = Message.load(
@@ -76,6 +90,12 @@ class Query(TrapiBaseClass):
                     biolink_version,
                     message=message,
                     )
+        # Load logs
+        logs = query.pop("logs", None)
+        if logs is not None and len(logs) > 0:
+            new_query.logger.add_logs(logs)
+        # Specify max results
+        new_query.max_results = query.pop("max_results", 10)
         return new_query
 
     def is_batch_query(self):

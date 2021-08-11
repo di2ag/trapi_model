@@ -15,7 +15,7 @@ class TrapiBaseClass:
             return json.dumps(self.to_dict(), indent=2)
         else:
             with open(filename, 'w') as json_file:
-                json.dump(self.to_dict(), json_file)
+                json.dump(self.to_dict(), json_file, indent=2)
 
     def __str__(self):
         return json.dumps(self.to_dict(), indent=2)

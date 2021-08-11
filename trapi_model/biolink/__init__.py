@@ -34,6 +34,7 @@ def set_toolkit(biolink_version):
                 break
     return
 
+
 #########
 # Classes
 #########
@@ -158,6 +159,9 @@ class BiolinkEntity:
         if self.get_curie() == other.get_curie():
             return True
         return False
+
+    def __lt__(self, other):
+        return self.get_curie() < other.get_curie()
 
     def __hash__(self):
         return hash(self.get_curie())
