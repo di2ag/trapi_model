@@ -20,6 +20,8 @@ class Query(TrapiBaseClass):
         self.max_results = max_results
         self.logger = Logger()
         self.id = q_id
+        self.status = None
+        self.description = None
         if q_id is None:
             self.id = str(uuid.uuid4())
         super().__init__(trapi_version, biolink_version)
@@ -31,7 +33,9 @@ class Query(TrapiBaseClass):
                 "trapi_version": self.trapi_version,
                 "biolink_version": self.biolink_version,
                 "logs": self.logger.to_dict(),
-                "pk": self.id,
+                "id": self.id,
+                "status": self.status,
+                "description": self.description,
                 }
     
     def find_and_replace(self, old_value, new_value):
@@ -48,6 +52,12 @@ class Query(TrapiBaseClass):
     
     def error(self, message, code=None):
         self.logger.error(message, code)
+
+    def set_status(self, message):
+        self.status = message
+
+    def set_description(self, message):
+        self.description = message
 
     def validate(self):
         _dict = self.to_dict()
