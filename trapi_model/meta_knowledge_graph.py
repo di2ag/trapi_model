@@ -132,7 +132,7 @@ class MetaKnowledgeGraph(TrapiBaseClass):
     def add_node(self, biolink_entity, id_prefixes):
         if type(id_prefixes) is str:
             id_prefixes = [id_prefixes]
-        elif id_prefixes is not list:
+        elif not isinstance(id_prefixes, list):
             raise ValueError('Id prefixes must be a string or list.')
         if type(biolink_entity) is str:
             biolink_entity = get_biolink_entity(biolink_entity)
