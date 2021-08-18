@@ -7,7 +7,7 @@ from trapi_model.base import TrapiBaseClass
 from trapi_model.biolink.constants import get_biolink_entity
 from trapi_model.exceptions import *
 
-from reasoner_validator import validate_MetaNode_1_1, validate_MetaEdge_1_1, validate_MetaKnowledgeGraph_1_1
+from reasoner_validator import validate
 
 class MetaNode(TrapiBaseClass):
     def __init__(self, id_prefixes, trapi_version, biolink_version):
@@ -37,13 +37,10 @@ class MetaNode(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.1':
-                validate_MetaNode_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'MetaNode', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class MetaEdge(TrapiBaseClass):
     def __init__(self, q_subject, q_object, predicate, trapi_version, biolink_version):
@@ -95,13 +92,10 @@ class MetaEdge(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.1':
-                validate_MetaEdge_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'MetaEdge', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class MetaKnowledgeGraph(TrapiBaseClass):
     def __init__(self, trapi_version, biolink_version):
@@ -163,13 +157,10 @@ class MetaKnowledgeGraph(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.1':
-                validate_MetaKnowledgeGraph_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'MetaKnowledgeGraph', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
     @staticmethod
     def load(trapi_version, biolink_version, meta_knowledge_graph=None, filename=None):

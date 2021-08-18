@@ -6,7 +6,7 @@ import itertools
 from collections import defaultdict
 
 from chp_utils.generic import dict_replace_value
-from reasoner_validator import validate_Message_1_0, validate_Message_1_1
+from reasoner_validator import validate
 
 from trapi_model.base import TrapiBaseClass
 from trapi_model.query_graph import QueryGraph
@@ -37,12 +37,7 @@ class Message(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_Message_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_Message_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'Message', self.trapi_version)
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -89,7 +84,6 @@ class Message(TrapiBaseClass):
                     k_object=kedge.object,
                     k_subject=kedge.subject,
                     predicate=kedge.predicate,
-                    relation=kedge.relation,
                     )
             if kedge.attributes is not None:
                 for attribute in kedge.attributes:
