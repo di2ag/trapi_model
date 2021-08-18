@@ -11,8 +11,7 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 
-from reasoner_validator import validate_Edge_1_0, validate_Edge_1_1, \
-validate_Node_1_0, validate_Node_1_1, validate_KnowledgeGraph_1_0, validate_KnowledgeGraph_1_1
+from reasoner_validator import validate
 
 
 class Attribute(TrapiBaseClass):
@@ -37,51 +36,29 @@ class Attribute(TrapiBaseClass):
         super().__init__(trapi_version, biolink_version)
 
     def to_dict(self):
-        if self.trapi_version == '1.0':
-            return {
-                        "name": self.original_attribute_name,
-                        "value": self.value,
-                        "type": self.attribute_type_id,
-                        "url": self.value_url,
-                        "source": self.attribute_source,
+        return {
+                    "attribute_type_id": self.attribute_type_id,
+                    "original_attribute_name": self.original_attribute_name,
+                    "value": self.value,
+                    "value_type_id": self.value_type_id,
+                    "attribute_source": self.attribute_source,
+                    "value_url": self.value_url,
+                    "description": self.description,
                     }
-        elif self.trapi_version == '1.1':
-            return {
-                        "attribute_type_id": self.attribute_type_id,
-                        "original_attribute_name": self.original_attribute_name,
-                        "value": self.value,
-                        "value_type_id": self.value_type_id,
-                        "attribute_source": self.attribute_source,
-                        "value_url": self.value_url,
-                        "description": self.description,
-                    }
-        else:
-            raise UnsupportedTrapiVersion(self.trapi_version)
 
     @staticmethod
     def load(trapi_version, biolink_version, attribute_info, name=None):
-        if trapi_version == '1.0':
-            attribute = Attribute(
-                    trapi_version,
-                    biolink_version,
-                    attribute_type_id=attribute_info.pop("type"),
-                    value=attribute_info.pop("value"),
-                    original_attribute_name=attribute_info.pop("name", None),
-                    attribute_source=attribute_info.pop("source", None),
-                    value_url=attribute_info.pop("url", None),
-                    )
-        elif trapi_version == '1.1':
-            attribute = Attribute(
-                    trapi_version,
-                    biolink_version,
-                    attribute_type_id=attribute_info.pop("attribute_type_id"),
-                    value=attribute_info.pop("value"),
-                    value_type_id=attribute_info.pop("value_type_id", None),
-                    original_attribute_name=attribute_info.pop("original_attribute_name", None),
-                    attribute_source=attribute_info.pop("attribute_source", None),
-                    value_url=attribute_info.pop("value_url", None),
-                    description=attribute_info.pop("description", None),
-                    )
+        attribute = Attribute(
+                trapi_version,
+                biolink_version,
+                attribute_type_id=attribute_info.pop("attribute_type_id"),
+                value=attribute_info.pop("value"),
+                value_type_id=attribute_info.pop("value_type_id", None),
+                original_attribute_name=attribute_info.pop("original_attribute_name", None),
+                attribute_source=attribute_info.pop("attribute_source", None),
+                value_url=attribute_info.pop("value_url", None),
+                description=attribute_info.pop("description", None),
+                )
         return attribute
 
 class KNode(TrapiBaseClass):
@@ -110,20 +87,11 @@ class KNode(TrapiBaseClass):
         categories = self.categories
         if categories is not None:
             categories = [category.get_curie() for category in categories]
-        if self.trapi_version == '1.0':
-            _dict = {
-                        "name": self.name,
-                        "category": categories,
-                        "attributes": [],
-                    }
-        elif self.trapi_version == '1.1':
-            _dict = {
-                        "name": self.name,
-                        "categories": categories,
-                        "attributes": []
-                    }
-        else:
-            raise UnsupportedTrapiVersion(self.trapi_version)
+        _dict = {
+                    "name": self.name,
+                    "categories": categories,
+                    "attributes": []
+                }
         if self.attributes is not None:
             for attribute in self.attributes:
                 _dict["attributes"].append(attribute.to_dict())
@@ -146,14 +114,9 @@ class KNode(TrapiBaseClass):
     @staticmethod
     def load(trapi_version, biolink_version, knode_info):
         knode = KNode(trapi_version, biolink_version)
-        if trapi_version == '1.0':
-            categories = knode_info.pop("category", None)
-            if categories is not None:
-                knode.set_categories(categories)
-        elif trapi_version == '1.1':
-            categories = knode_info.pop("categories", None)
-            if categories is not None:
-                knode.set_categories(categories)
+        categories = knode_info.pop("categories", None)
+        if categories is not None:
+            knode.set_categories(categories)
         knode.name = knode_info.pop("name", None)
         attributes = knode_info.pop("attributes", None)
         if attributes is not None:
@@ -202,15 +165,10 @@ class KNode(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_Node_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_Node_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'Node', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class KEdge(TrapiBaseClass):
     def __init__(self,
@@ -219,13 +177,11 @@ class KEdge(TrapiBaseClass):
             k_subject,
             k_object,
             predicate=None,
-            relation=None,
             attributes=None,
             ):
         self.subject = k_subject
         self.object = k_object
         self.predicate = predicate
-        self.relation = relation
         if attributes is None:
             self.attributes = []
         else:
@@ -237,23 +193,19 @@ class KEdge(TrapiBaseClass):
             raise InvalidTrapiComponent(trapi_version, 'KEdge', message)
 
     def to_dict(self):
-        if self.trapi_version == '1.0' or self.trapi_version == '1.1':
-            predicate = self.predicate
-            if predicate is not None:
-                predicate = predicate.get_curie()
-            _dict = {
-                    "predicate": predicate,
-                    "relation": self.relation,
-                    "subject": self.subject,
-                    "object": self.object,
-                    }
-            if self.attributes is not None:
-                _dict["attributes"] = []
-                for attribute in self.attributes:
-                    _dict["attributes"].append(attribute.to_dict())
-            return _dict
-        else:
-            raise UnsupportedTrapiVersion(self.trapi_version)
+        predicate = self.predicate
+        if predicate is not None:
+            predicate = predicate.get_curie()
+        _dict = {
+                "predicate": predicate,
+                "subject": self.subject,
+                "object": self.object,
+                }
+        if self.attributes is not None:
+            _dict["attributes"] = []
+            for attribute in self.attributes:
+                _dict["attributes"].append(attribute.to_dict())
+        return _dict
 
     @staticmethod
     def load(trapi_version, biolink_version, kedge_info):
@@ -266,7 +218,6 @@ class KEdge(TrapiBaseClass):
         predicate = kedge_info.pop("predicate", None)
         if predicate is not None:
             kedge.predicate = get_biolink_entity(predicate)
-        kedge.relation = kedge_info.pop("relation", None)
         attributes = kedge_info.pop("attributes", None)
         if attributes is not None:
             for attribute_info in attributes:
@@ -315,15 +266,10 @@ class KEdge(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_Edge_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_Edge_1_1(_dict)
-            else:
-                raise UnsuppoertedTrapiVersion(self.trapi_version)
+            validate(_dict, 'Edge', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class KnowledgeGraph(TrapiBaseClass):
     def __init__(self, trapi_version='1.1', biolink_version=None):
@@ -354,7 +300,7 @@ class KnowledgeGraph(TrapiBaseClass):
                 )
         return curie
 
-    def add_edge(self, k_subject, k_object, predicate=None, relation=None):
+    def add_edge(self, k_subject, k_object, predicate=None):
         # Run predicates through Biolink
         if type(predicate) is not BiolinkEntity:
             predicate = BiolinkEntity(predicate, biolink_version=self.biolink_version)
@@ -366,7 +312,6 @@ class KnowledgeGraph(TrapiBaseClass):
                 k_subject=k_subject,
                 k_object=k_object,
                 predicate=predicate,
-                relation=relation,
                 )
         return edge_id
 
@@ -427,12 +372,7 @@ class KnowledgeGraph(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_KnowledgeGraph_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_KnowledgeGraph_1_1(_dict)
-            else:
-                raise UnsuppoertedTrapiVersion(self.trapi_version)
+            validate(_dict, 'KnowledgeGraph', self.trapi_version)
             return True, None 
         except ValidationError as ex:
             return False, ex.message

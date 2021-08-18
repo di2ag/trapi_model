@@ -9,8 +9,7 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 from requests import request
-from reasoner_validator import validate_QEdge_1_0, validate_QEdge_1_1, \
-validate_QNode_1_0, validate_QNode_1_1, validate_QueryGraph_1_0, validate_QueryGraph_1_1
+from reasoner_validator import validate
 
 import logging
 # Setup logging
@@ -43,54 +42,29 @@ class QConstraintOrAdditionalProperty(TrapiBaseClass):
         super().__init__(trapi_version, biolink_version)
 
     def to_dict(self):
-        if self.trapi_version == '1.0':
-            return {
-                    self.name: {
-                        "id": self.id,
-                        "operator": self.operator,
-                        "value": self.value,
-                        "unit_id": self.unit_id,
-                        "unit_name": self.unit_name,
-                        }
-                    }
-        elif self.trapi_version == '1.1':
-            return {
-                        "name": self.name,
-                        "id": self.id,
-                        "operator": self.operator,
-                        "value": self.value,
-                        "unit_id": self.unit_id,
-                        "unit_name": self.unit_name,
-                        "not": self.c_not,
-                    }
-        else:
-            raise UnsupportedTrapiVersion(self.trapi_version)
+        return {
+                    "name": self.name,
+                    "id": self.id,
+                    "operator": self.operator,
+                    "value": self.value,
+                    "unit_id": self.unit_id,
+                    "unit_name": self.unit_name,
+                    "not": self.c_not,
+                }
 
     @staticmethod
     def load(trapi_version, biolink_version, constraint_info, name=None):
-        if trapi_version == '1.0':
-            constraint = QConstraintOrAdditionalProperty(
-                    trapi_version,
-                    biolink_version,
-                    name=name,
-                    c_id=constraint_info.pop("id"),
-                    operator=constraint_info.pop("operator"),
-                    value=constraint_info.pop("value"),
-                    unit_id=constraint_info.pop("unit_id", None),
-                    unit_name=constraint_info.pop("unit_name", None),
-                    )
-        elif trapi_version == '1.1':
-            constraint = QConstraintOrAdditionalProperty(
-                    trapi_version,
-                    biolink_version,
-                    name=constraint_info.pop("name"),
-                    c_id=constraint_info.pop("id"),
-                    operator= constraint_info.pop("operator"),
-                    value=constraint_info.pop("value"),
-                    unit_id=constraint_info.pop("unit_id", None),
-                    unit_name=constraint_info.pop("unit_name", None),
-                    c_not=constraint_info.pop("not", False),
-                    )
+        constraint = QConstraintOrAdditionalProperty(
+                trapi_version,
+                biolink_version,
+                name=constraint_info.pop("name"),
+                c_id=constraint_info.pop("id"),
+                operator= constraint_info.pop("operator"),
+                value=constraint_info.pop("value"),
+                unit_id=constraint_info.pop("unit_id", None),
+                unit_name=constraint_info.pop("unit_name", None),
+                c_not=constraint_info.pop("not", False),
+                )
         return constraint
 
 class QNode(TrapiBaseClass):
@@ -147,67 +121,36 @@ class QNode(TrapiBaseClass):
         categories = self.categories
         if categories is not None:
             categories = [category.get_curie() for category in categories]
-        if self.trapi_version == '1.0':
-            _dict = {
-                        "id": self.ids,
-                        "category": categories,
-                    }
-            if self.constraints is not None:
-                for constraint in self.constraints:
-                    _dict.update(constraint.to_dict())
-            return _dict
-        elif self.trapi_version == '1.1':
-            _dict = {
-                        "ids": self.ids,
-                        "categories": categories,
-                        "constraints": []
-                    }
-            if self.constraints is not None:
-                for constraint in self.constraints:
-                    _dict["constraints"].append(constraint.to_dict())
-            return _dict
-        else:
-            raise UnsupportedTrapiVersion(self.trapi_version)
+        _dict = {
+                    "ids": self.ids,
+                    "categories": categories,
+                    "constraints": []
+                }
+        if self.constraints is not None:
+            for constraint in self.constraints:
+                _dict["constraints"].append(constraint.to_dict())
+        return _dict
 
     @staticmethod
     def load(trapi_version, biolink_version, node_info):
-        if trapi_version == '1.0':
-            qnode = QNode(trapi_version, biolink_version)
-            ids = node_info.pop("id", None)
-            if ids is not None:
-                qnode.set_ids(ids)
-            categories = node_info.pop("category", None)
-            if categories is not None:
-                qnode.set_categories(categories)
+        qnode = QNode(trapi_version, biolink_version)
+        ids = node_info.pop("ids", None)
+        if ids is not None:
+            qnode.set_ids(ids)
+        categories = node_info.pop("categories", None)
+        if categories is not None:
+            qnode.set_categories(categories)
+        constraints = node_info.pop("constraints", None)
+        if constraints is not None:
             # Process constraints
-            for name, constraint_info in node_info.items():
+            for constraint_info in constraints:
                 qnode.constraints.append(
                         QConstraintOrAdditionalProperty.load(
                             trapi_version,
                             biolink_version,
                             constraint_info,
-                            name=name,
                             )
                         )
-        elif trapi_version == '1.1':
-            qnode = QNode(trapi_version, biolink_version)
-            ids = node_info.pop("ids", None)
-            if ids is not None:
-                qnode.set_ids(ids)
-            categories = node_info.pop("categories", None)
-            if categories is not None:
-                qnode.set_categories(categories)
-            constraints = node_info.pop("constraints", None)
-            if constraints is not None:
-                # Process constraints
-                for constraint_info in constraints:
-                    qnode.constraints.append(
-                            QConstraintOrAdditionalProperty.load(
-                                trapi_version,
-                                biolink_version,
-                                constraint_info,
-                                )
-                            )
         valid, message = qnode.validate()
         if valid:
             return qnode
@@ -245,15 +188,10 @@ class QNode(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_QNode_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_QNode_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'QNode', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class QEdge(TrapiBaseClass):
     def __init__(self,
@@ -262,7 +200,6 @@ class QEdge(TrapiBaseClass):
             q_subject='',
             q_object='',
             predicates=None,
-            relation=None,
             constraints=None,
             ):
         self.subject = q_subject
@@ -270,7 +207,6 @@ class QEdge(TrapiBaseClass):
         if type(predicates) is not list and predicates is not None:
             predicates = [predicates]
         self.predicates = predicates
-        self.relation = relation
         if constraints is None:
             self.constraints = []
         else:
@@ -306,70 +242,36 @@ class QEdge(TrapiBaseClass):
         predicates = self.predicates
         if predicates is not None:
             predicates = [_predicate.get_curie() for _predicate in predicates]
-        if self.trapi_version == '1.0':
-            _dict = {
-                    "predicate": predicates,
-                    "relation": self.relation,
-                    "subject": self.subject,
-                    "object": self.object,
-                    }
-            if self.constraints is not None:
-                for constraint in self.constraints:
-                    _dict.update(constraint.to_dict())
-            return _dict
-        elif self.trapi_version == '1.1':
-            _dict = {
-                    "predicates": predicates,
-                    "relation": self.relation,
-                    "subject": self.subject,
-                    "object": self.object,
-                    }
-            if self.constraints is not None:
-                _dict["constraints"] = []
-                for constraint in self.constraints:
-                    _dict["constraints"].append(constraint.to_dict())
-            return _dict
+        _dict = {
+                "predicates": predicates,
+                "subject": self.subject,
+                "object": self.object,
+                }
+        if self.constraints is not None:
+            _dict["constraints"] = []
+            for constraint in self.constraints:
+                _dict["constraints"].append(constraint.to_dict())
+        return _dict
     
     @staticmethod
     def load(trapi_version, biolink_version, edge_info):
         qedge = QEdge(trapi_version, biolink_version)
-        if trapi_version == '1.0':
-            qedge.subject = edge_info.pop("subject")
-            qedge.object = edge_info.pop("object")
-            predicates = edge_info.pop("predicate", None)
-            if predicates is not None:
-                qedge.set_predicates(predicates)
-            qedge.relation = edge_info.pop("relation", None)
+        qedge.subject = edge_info.pop("subject")
+        qedge.object = edge_info.pop("object")
+        predicates = edge_info.pop("predicates", None)
+        if predicates is not None:
+            qedge.set_predicates(predicates)
+        constraints = edge_info.pop("constraints", None)
+        if constraints is not None:
             # Process constraints
-            for name, constraint_info in edge_info.items():
+            for constraint_info in constraints:
                 qedge.constraints.append(
                         QConstraintOrAdditionalProperty.load(
                             trapi_version,
                             biolink_version,
                             constraint_info,
-                            name=name,
                             )
                         )
-        elif trapi_version == '1.1':
-            qedge.subject = edge_info.pop("subject")
-            qedge.object = edge_info.pop("object")
-            predicates = edge_info.pop("predicates", None)
-            
-
-            if predicates is not None:
-                qedge.set_predicates(predicates)
-            qedge.relation = edge_info.pop("relation", None)
-            constraints = edge_info.pop("constraints", None)
-            if constraints is not None:
-                # Process constraints
-                for constraint_info in constraints:
-                    qedge.constraints.append(
-                            QConstraintOrAdditionalProperty.load(
-                                trapi_version,
-                                biolink_version,
-                                constraint_info,
-                                )
-                            )
         valid, message = qedge.validate()
         if valid:
             return qedge
@@ -407,15 +309,10 @@ class QEdge(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_QEdge_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_QEdge_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'QEdge', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class QueryGraph(TrapiBaseClass):
     def __init__(self, trapi_version='1.1', biolink_version=None):
@@ -441,7 +338,7 @@ class QueryGraph(TrapiBaseClass):
                 )
         return node_id
 
-    def add_edge(self, q_subject, q_object, predicates, relation=None):
+    def add_edge(self, q_subject, q_object, predicates):
         # Run predicates through Biolink
         if type(predicates) is not list and predicates is not None:
             predicates = [BiolinkEntity(predicates, self.biolink_version)]
@@ -455,7 +352,6 @@ class QueryGraph(TrapiBaseClass):
                 q_subject=q_subject,
                 q_object=q_object,
                 predicates=predicates,
-                relation=relation,
                 )
         return edge_id
 
@@ -566,12 +462,7 @@ class QueryGraph(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_QueryGraph_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_QueryGraph_1_1(_dict)
-            else:
-                raise UnsuppoertedTrapiVersion(self.trapi_version)
+            validate(_dict, 'QueryGraph', self.trapi_version)
             return True, None 
         except ValidationError as ex:
             return False, ex.message
