@@ -6,11 +6,12 @@ import copy
 import itertools
 from collections import defaultdict
 
-from reasoner_validator import validate_Query_1_0, validate_Query_1_1
+from reasoner_validator import validate
 
 from trapi_model.base import TrapiBaseClass
 from trapi_model.message import Message
 from trapi_model.logger import Logger
+from trapi_model.workflow import Workflow
 
 class Query(TrapiBaseClass):
     def __init__(self, trapi_version='1.1', biolink_version=None, max_results=10, q_id=None):
@@ -22,6 +23,7 @@ class Query(TrapiBaseClass):
         self.id = q_id
         self.status = None
         self.description = None
+        self.workflow = Workflow()
         if q_id is None:
             self.id = str(uuid.uuid4())
         super().__init__(trapi_version, biolink_version)
@@ -36,6 +38,7 @@ class Query(TrapiBaseClass):
                 "id": self.id,
                 "status": self.status,
                 "description": self.description,
+                "workflow": self.workflow.to_dict(),
                 }
     
     def find_and_replace(self, old_value, new_value):
@@ -59,15 +62,13 @@ class Query(TrapiBaseClass):
     def set_description(self, message):
         self.description = message
 
+    def add_workflow(self, workflow_step):
+        self.workflow.add_step(workflow_step)
+
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_Query_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_Query_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'Query', self.trapi_version)
             return True, None 
         except ValidationError as ex:
             return False, ex.message

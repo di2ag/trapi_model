@@ -12,7 +12,7 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 
-from reasoner_validator import validate_Result_1_0, validate_Result_1_1
+from reasoner_validator import validate
 
 
 class Result(TrapiBaseClass):
@@ -83,15 +83,10 @@ class Result(TrapiBaseClass):
     def validate(self):
         _dict = self.to_dict()
         try:
-            if self.trapi_version == '1.0':
-                validate_Result_1_0(_dict)
-            elif self.trapi_version == '1.1':
-                validate_Result_1_1(_dict)
-            else:
-                raise UnsupportedTrapiVersion(self.trapi_version)
+            validate(_dict, 'Result', self.trapi_version)
             return True, None 
         except ValidationError as ex:
-                return False, ex.message
+            return False, ex.message
 
 class Results(TrapiBaseClass):
     def __init__(self, trapi_version, biolink_version):
@@ -130,8 +125,7 @@ class Binding(TrapiBaseClass):
         super().__init__(trapi_version, biolink_version)
     
     def to_dict(self):
-        if self.trapi_version == '1.0' or self.trapi_version == '1.1':
-            return {"id": self.id}
+        return {"id": self.id}
 
     @staticmethod
     def load(trapi_version, biolink_version, binding_info):
