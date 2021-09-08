@@ -95,8 +95,16 @@ class Query(TrapiBaseClass):
         logs = query.pop("logs", None)
         if logs is not None and len(logs) > 0:
             new_query.logger.add_logs(logs)
-        # Specify max results
-        new_query.max_results = query.pop("max_results", 10)
+
+        # Load workflow
+        query_workflow = query.pop('workflow', dict())
+        new_query.workflow.query_workflow = query_workflow
+        new_query.workflow.check_workflow()
+
+        # Specify max results - now specified in workflow
+        #new_query.max_results = query.pop("max_results", 10)
+        new_query.max_results = new_query.workflow.max_results
+
         return new_query
 
     def is_batch_query(self):

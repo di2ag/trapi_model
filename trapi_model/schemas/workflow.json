@@ -1,0 +1,22 @@
+{
+  'workflow': [
+    {
+      'id':'fill'
+    },
+    {
+      'id':'bind'
+    },
+    {
+      'id':'complete_results'
+    },
+    {
+      'id':'lookup'
+    },
+    {
+      'id':'overlay'
+    },
+    {
+      'id':'filter_results_top_n'
+    }
+  ]
+}
