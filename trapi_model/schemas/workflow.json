@@ -1,22 +1,22 @@
 {
-  'workflow': [
+  "workflow": [
     {
-      'id':'fill'
+      "id":"fill"
     },
     {
-      'id':'bind'
+      "id":"bind"
     },
     {
-      'id':'complete_results'
+      "id":"complete_results"
     },
     {
-      'id':'lookup'
+      "id":"lookup"
     },
     {
-      'id':'overlay'
+      "id":"overlay"
     },
     {
-      'id':'filter_results_top_n'
+      "id":"filter_results_top_n"
     }
   ]
 }

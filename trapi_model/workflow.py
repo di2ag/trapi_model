@@ -1,5 +1,9 @@
+import os
 import json
+import trapi_model
 from trapi_model.base import TrapiBaseClass
+
+WORKFLOW_PATH = os.path.join(os.path.dirname(trapi_model.__file__), 'schemas/workflow.json')
 
 class WorkflowStep(TrapiBaseClass):
     def __init__(self, workflow_id):
@@ -17,7 +21,7 @@ class WorkflowStep(TrapiBaseClass):
 
 class Workflow(TrapiBaseClass):
     def __init__(self):
-        self.workflow_file = open('../schemas/workflow.json', 'r')
+        self.workflow_file = open(WORKFLOW_PATH, 'r')
         self.workflow = json.load(self.workflow_file)
         self.query_workflow = dict()
         self.max_results = 10
