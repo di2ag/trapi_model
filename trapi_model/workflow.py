@@ -3,7 +3,7 @@ import json
 import trapi_model
 from trapi_model.base import TrapiBaseClass
 
-WORKFLOW_PATH = os.path.join(os.path.dirname(trapi_model.__file__), 'schemas/workflow.json')
+WORKFLOW_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'schemas/workflow.json'))
 
 class WorkflowStep(TrapiBaseClass):
     def __init__(self, workflow_id):
