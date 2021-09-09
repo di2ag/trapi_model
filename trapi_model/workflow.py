@@ -34,7 +34,7 @@ class Workflow(TrapiBaseClass):
 
     def to_dict(self):
         workflow_steps = [step.to_dict() for step in self.workflow_steps]
-        return workflow
+        return workflow_steps
 
     def check_workflow(self):
         operations_dict = self.workflow.pop('workflow')
