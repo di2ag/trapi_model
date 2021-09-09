@@ -25,6 +25,7 @@ setup(
         'trapi_model.data.biolink_schemas': ['*.yaml', '*.yml'],
         'trapi_model.data.trapi_schemas': ['*.yaml', '*.yml'],
         'trapi_model.biolink.constants': ['*.csv'],
+        'trapi_model.schemas':['*.json'],
         },
     include_package_data=True,
     install_requires=[
