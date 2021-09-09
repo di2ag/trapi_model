@@ -45,9 +45,10 @@ class Workflow(TrapiBaseClass):
 
         for operation in self.query_workflow:
             operation_term = operation.pop('id', None)
+            if operation_term == 'filter_results_top_n':
+                param = operation.pop('parameters')
+                self.max_results = param.pop('max_results')
             if operation_term not in operations_terms:
                 raise Exception('Workflow Error: Connections Hypothesis Provider does not handle {} operations'.format(operation_term))
 
-        self.max_results = query_operations_dict.pop('filter_results_top_n', dict()).pop('parameters', dict()).pop('max_results', 10)
-        operations = []
 
