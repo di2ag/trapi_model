@@ -97,7 +97,7 @@ class Query(TrapiBaseClass):
             new_query.logger.add_logs(logs)
 
         # Load workflow
-        query_workflow = query.pop('workflow', dict())
+        query_workflow = query.pop('workflow', [])
         new_query.workflow.query_workflow = query_workflow
         new_query.workflow.check_workflow()
 

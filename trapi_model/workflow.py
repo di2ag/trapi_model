@@ -23,7 +23,7 @@ class Workflow(TrapiBaseClass):
     def __init__(self):
         self.workflow_file = open(WORKFLOW_PATH, 'r')
         self.workflow = json.load(self.workflow_file)
-        self.query_workflow = dict()
+        self.query_workflow = []
         self.max_results = 10
         self.workflow_steps = []
 
@@ -43,8 +43,7 @@ class Workflow(TrapiBaseClass):
             operation_term = operation.pop('id')
             operations_terms.append(operation_term)
 
-        query_operations_dict = self.query_workflow.pop('workflow', dict())
-        for operation in query_operations_dict:
+        for operation in self.query_workflow:
             operation_term = operation.pop('id', None)
             if operation_term not in operations_terms:
                 raise Exception('Workflow Error: Connections Hypothesis Provider does not handle {} operations'.format(operation_term))
