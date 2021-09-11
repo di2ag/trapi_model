@@ -23,6 +23,7 @@ class Workflow(TrapiBaseClass):
     def __init__(self):
         self.workflow_file = open(WORKFLOW_PATH, 'r')
         self.workflow = json.load(self.workflow_file)
+        self.workflow_file.close()
         self.query_workflow = []
         self.max_results = 10
         self.workflow_steps = []
