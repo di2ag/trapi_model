@@ -272,7 +272,7 @@ class KEdge(TrapiBaseClass):
             return False, ex.message
 
 class KnowledgeGraph(TrapiBaseClass):
-    def __init__(self, trapi_version='1.1', biolink_version=None):
+    def __init__(self, trapi_version='1.2', biolink_version=None):
         self.nodes = {}
         self.edges = {}
         self.node_counter = 0

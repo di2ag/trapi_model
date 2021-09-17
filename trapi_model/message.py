@@ -15,7 +15,7 @@ from trapi_model.results import Results, Result
 
 
 class Message(TrapiBaseClass):
-    def __init__(self, trapi_version='1.1', biolink_version=None):
+    def __init__(self, trapi_version='1.2', biolink_version=None):
         self.trapi_version = trapi_version
         self.biolink_version = biolink_version
         self.query_graph = QueryGraph(trapi_version, biolink_version)

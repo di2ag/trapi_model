@@ -14,7 +14,7 @@ from trapi_model.logger import Logger
 from trapi_model.workflow import Workflow
 
 class Query(TrapiBaseClass):
-    def __init__(self, trapi_version='1.1', biolink_version=None, max_results=10, q_id=None):
+    def __init__(self, trapi_version='1.2', biolink_version=None, max_results=10, q_id=None):
         self.trapi_version = trapi_version
         self.biolink_version = biolink_version
         self.message = Message(trapi_version, biolink_version)
