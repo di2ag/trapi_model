@@ -33,6 +33,7 @@ setup(
         'pyyaml>=5.1',
         'jsonschema',
         'bmt',
+        'deepdiff',
     ],
     zip_safe=False,
     python_requires='>=3.6',
