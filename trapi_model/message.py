@@ -4,6 +4,7 @@ from jsonschema import ValidationError
 import copy
 import itertools
 from collections import defaultdict
+from deepdiff import DeepDiff
 
 from chp_utils.generic import dict_replace_value
 from reasoner_validator import validate
@@ -41,6 +42,16 @@ class Message(TrapiBaseClass):
             return True, None 
         except ValidationError as ex:
             return False, ex.message
+
+    @staticmethod
+    def check_messages_are_equal(message_1, message_2):
+        message_1_dict = message_1.to_dict()
+        message_2_dict = message_2.to_dict()
+        diff = DeepDiff(message_1_dict, message_2_dict)
+        if diff == {}:
+            return True
+        else:
+            return False
 
     @staticmethod
     def load(trapi_version, biolink_version, message):
