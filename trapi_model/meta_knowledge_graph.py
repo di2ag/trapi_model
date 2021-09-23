@@ -9,6 +9,32 @@ from trapi_model.exceptions import *
 
 from reasoner_validator import validate
 
+def merge_meta_knowledge_graphs(list_of_meta_kgs):
+    if len(list_of_meta_kgs) == 1:
+        return list_of_meta_kgs[0]
+    merged = list_of_meta_kgs[0]
+    for meta_kg in list_of_meta_kgs[1:]:
+        # Merge nodes
+        for biolink_entity, meta_node in meta_kg.nodes.items():
+            try:
+                new_id_prefixes_set = set.union(*[set(meta_node.id_prefixes), set(merged[biolink_entity].id_prefixes)])
+                merged[biolink_entity].id_prefixes = list(new_id_prefixes_set)
+            except KeyError:
+                merged.add_node(
+                        biolink_entity,
+                        meta_node.id_prefixes,
+                        )
+        # Merge Edges
+        for meta_edge in meta_kg.edges:
+            if meta_edge not in merged.edges:
+                merged.add_edge(
+                        meta_edge.subject,
+                        meta_edge.object,
+                        meta_edge.predicate,
+                        )
+    return merged
+
+
 class MetaNode(TrapiBaseClass):
     def __init__(self, id_prefixes, trapi_version, biolink_version):
         self.id_prefixes = id_prefixes
@@ -96,6 +122,15 @@ class MetaEdge(TrapiBaseClass):
             return True, None 
         except ValidationError as ex:
             return False, ex.message
+
+    def __eq__(self, other):
+        if self.subject != other.subject:
+            return False
+        if self.object != other.object:
+            return False
+        if self.predicate != other.predicate:
+            return False
+        return True
 
 class MetaKnowledgeGraph(TrapiBaseClass):
     def __init__(self, trapi_version, biolink_version):
