@@ -17,7 +17,7 @@ def merge_meta_knowledge_graphs(list_of_meta_kgs):
         # Merge nodes
         for biolink_entity, meta_node in meta_kg.nodes.items():
             try:
-                new_id_prefixes_set = set.union(*[set(meta_node.id_prefixes), set(merged[biolink_entity].id_prefixes)])
+                new_id_prefixes_set = set.union(*[set(meta_node.id_prefixes), set(merged.to_dict()[biolink_entity].id_prefixes)])
                 merged[biolink_entity].id_prefixes = list(new_id_prefixes_set)
             except KeyError:
                 merged.add_node(
