@@ -32,7 +32,7 @@ setup(
     install_requires=[
         'pyyaml>=5.1',
         'jsonschema',
-        'bmt==0.7.4',
+        'bmt',
         'deepdiff',
     ],
     zip_safe=False,
