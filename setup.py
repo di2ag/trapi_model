@@ -30,9 +30,8 @@ setup(
         },
     include_package_data=True,
     install_requires=[
-        'pyyaml>=5.1',
         'jsonschema',
-        'bmt',
+        'bmt==0.7.4',
         'deepdiff',
     ],
     zip_safe=False,
