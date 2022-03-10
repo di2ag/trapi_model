@@ -60,20 +60,25 @@ else:
             biolink_entity = BiolinkEntity(constant_name)
         except UnknownBiolinkEntity:
             logger.warning('Could not get element for {}.'.format(constant_name))
+        except ValueError as ex:
+            logger.warning(str(ex))
         # Now format constant name
         formatted_name = 'BIOLINK_' + '_'.join(constant_name.strip().upper().split(' '))
         biolink_entity_name = formatted_name + '_ENTITY'
         # set the constants and entities
-        setattr(
-                sys.modules[__name__],
-                formatted_name,
-                constant_name,
-                )
-        setattr(
-                sys.modules[__name__],
-                biolink_entity_name,
-                biolink_entity,
-                )
+        try:
+            setattr(
+                    sys.modules[__name__],
+                    formatted_name,
+                    constant_name,
+                    )
+            setattr(
+                    sys.modules[__name__],
+                    biolink_entity_name,
+                    biolink_entity,
+                    )
+        except ValueError as ex:
+            logger.warning(str(ex))
 
 def get_biolink_entity(name):
     if not BIOLINK_DEBUG:
