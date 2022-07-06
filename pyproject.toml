@@ -56,3 +56,11 @@ exclude = '''  # Specify the files/dirs that should be ignored by the black form
 include = '\.pyi?$'
 line-length = 88 # Specify the line length
 target-version = ['py38'] # Specify your Python version
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.0"
+version_files = [
+    "pyproject.toml:version",
+    "__version__.py"
+]
