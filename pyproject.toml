@@ -9,13 +9,7 @@ maintainers = [
 ]
 name = "trapi_model"
 packages = [
-  {include = "trapi_model"},
-  {include = 'data', from = "trapi_model"},
-  {include = "biolink_schemas", from = "data"},
-  {include = "trapi_schemas", from = "data"},
-  {include = "biolink", from = "trapi_model"},
-  {include = "constants", from = "biolink"},
-  {include = "schemas", from = "trapi_model"},
+  {include = "trapi_model"}
 ]
 readme = "README.md"
 repository = "https://github.com/di2ag/trapi_model.git"
@@ -24,7 +18,7 @@ version = "0.1.0"
 [tool.poetry.dependencies]
 bmt = "^0.7.4"
 deepdiff = "^5.8.1"
-jsonschema = "^4.6.1"
+jsonschema = "3.2.0"
 python = "^3.8"
 reasoner-validator = {git = "https://github.com/di2ag/reasoner-validator.git"}
 
