@@ -13,7 +13,7 @@ packages = [
 ]
 readme = "README.md"
 repository = "https://github.com/di2ag/trapi_model.git"
-version = "0.1.0"
+version = "1.0.0"
 
 [tool.poetry.dependencies]
 bmt = "^0.7.4"
