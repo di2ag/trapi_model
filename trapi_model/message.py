@@ -1,12 +1,11 @@
-import json
-import os
+from __future__ import annotations
+from typing import Any, Dict, Union, Type, List
 from jsonschema import ValidationError
-import copy
-import itertools
 from collections import defaultdict
 from deepdiff import DeepDiff
 
 from chp_utils.generic import dict_replace_value
+from pydantic import Json
 from reasoner_validator import validate
 
 from trapi_model.base import TrapiBaseClass
@@ -14,9 +13,13 @@ from trapi_model.query_graph import QueryGraph
 from trapi_model.knowledge_graph import KnowledgeGraph
 from trapi_model.results import Results, Result
 
+from typing import Union, Dict, List
+
+JSON = Union[Dict[str, "JSON"], List["JSON"], int, str, float, bool, Type[None]]
+
 
 class Message(TrapiBaseClass):
-    def __init__(self, trapi_version='1.2', biolink_version=None):
+    def __init__(self, trapi_version="1.2", biolink_version=None):
         self.trapi_version = trapi_version
         self.biolink_version = biolink_version
         self.query_graph = QueryGraph(trapi_version, biolink_version)
@@ -25,21 +28,23 @@ class Message(TrapiBaseClass):
 
     def to_dict(self):
         return {
-                "query_graph": self.query_graph.to_dict(),
-                "knowledge_graph": self.knowledge_graph.to_dict(),
-                "results": self.results.to_dict(),
-                }
+            "query_graph": self.query_graph.to_dict(),
+            "knowledge_graph": self.knowledge_graph.to_dict(),
+            "results": self.results.to_dict(),
+        }
 
     def find_and_replace(self, old_value, new_value):
         message_dict = self.to_dict()
         replaced_message_dict = dict_replace_value(message_dict, old_value, new_value)
-        return Message.load(self.trapi_version, self.biolink_version, replaced_message_dict)
+        return Message.load(
+            self.trapi_version, self.biolink_version, replaced_message_dict
+        )
 
     def validate(self):
         _dict = self.to_dict()
         try:
-            validate(_dict, 'Message', self.trapi_version)
-            return True, None 
+            validate(_dict, "Message", self.trapi_version)
+            return True, None
         except ValidationError as ex:
             return False, ex.message
 
@@ -54,28 +59,32 @@ class Message(TrapiBaseClass):
             return False
 
     @staticmethod
-    def load(trapi_version, biolink_version, message):
+    def load(trapi_version: str, biolink_version: str, message: JSON) -> Message:
         new_message = Message(trapi_version, biolink_version)
-        query_graph = message.pop("query_graph", None)
-        knowledge_graph = message.pop("knowledge_graph", None)
-        results = message.pop("results", None)
+        query_graph: Union[JSON, None] = message.pop("query_graph", None)  # type: ignore
+        knowledge_graph: Union[JSON, None] = message.pop("knowledge_graph", None)  # type: ignore
+        results: Union[JSON, None] = message.pop("results", None)  # type: ignore
         if query_graph is not None:
-            new_message.query_graph = QueryGraph.load(trapi_version, biolink_version, query_graph)
+            new_message.query_graph = QueryGraph.load(
+                trapi_version, biolink_version, query_graph
+            )
         if knowledge_graph is not None:
-            new_message.knowledge_graph = KnowledgeGraph.load(trapi_version, biolink_version, knowledge_graph)
+            new_message.knowledge_graph = KnowledgeGraph.load(
+                trapi_version, biolink_version, knowledge_graph
+            )
         if results is not None:
             new_message.results = Results.load(trapi_version, biolink_version, results)
         return new_message
 
-    def update(self, kg, res=None):
+    def update(self, knowledge_graph: KnowledgeGraph, res=None):
         _map = {}
         # Process KG nodes
-        for knode_id, knode in kg.nodes.items():
+        for knode_id, knode in knowledge_graph.nodes.items():
             master_knode_id = self.knowledge_graph.add_node(
-                    knode_id,
-                    knode.name,
-                    categories=knode.categories,
-                    )
+                knode_id,
+                knode.name,
+                categories=knode.categories,
+            )
             if knode.attributes is not None:
                 for attribute in knode.attributes:
                     self.knowledge_graph.add_attribute(
@@ -87,15 +96,15 @@ class Message(TrapiBaseClass):
                         value_url=attribute.value_url,
                         description=attribute.description,
                         node_id=master_knode_id,
-                        )
+                    )
             _map[knode_id] = master_knode_id
         # Process edges
-        for kedge_id, kedge in kg.edges.items():
+        for kedge_id, kedge in knowledge_graph.edges.items():
             master_kedge_id = self.knowledge_graph.add_edge(
-                    k_object=kedge.object,
-                    k_subject=kedge.subject,
-                    predicate=kedge.predicate,
-                    )
+                k_object=kedge.object,
+                k_subject=kedge.subject,
+                predicate=kedge.predicate,
+            )
             if kedge.attributes is not None:
                 for attribute in kedge.attributes:
                     self.knowledge_graph.add_attribute(
@@ -107,7 +116,7 @@ class Message(TrapiBaseClass):
                         value_url=attribute.value_url,
                         description=attribute.description,
                         edge_id=master_kedge_id,
-                        )
+                    )
             _map[kedge_id] = master_kedge_id
         # Process results
         if res is not None:
@@ -122,6 +131,6 @@ class Message(TrapiBaseClass):
                     new_kg_ids = [_map[binding.id] for binding in edge_bindings]
                     new_edge_bindings[qg_id].extend(new_kg_ids)
                 self.results.add_result(
-                        new_node_bindings,
-                        new_edge_bindings,
-                        )
+                    new_node_bindings,
+                    new_edge_bindings,
+                )

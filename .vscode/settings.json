@@ -1,4 +1,4 @@
 {
-    "python.analysis.typeCheckingMode": "off",
+    "python.analysis.typeCheckingMode": "strict",
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/",
 }
