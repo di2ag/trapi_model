@@ -1,13 +1,14 @@
 [tool.poetry]
+name = "trapi_model"
 authors = ["Chase Yakaboski <chase.th@dartmouth.edu>"]
 description = "Python Data Classes for TRAPI."
 license = "Apache-2.0"
 maintainers = [
   "Luke Veenhuis <luke.veenhuis@gmail.com>",
-  "Greg Hyde",
+  "Greg Hyde <gregory.m.hyde.th@dartmouth.edu>",
   "Anthony Ragazzi <anthony.p.ragazzi.th@dartmouth.edu>",
+  "Chase Yakaboski <chase.th@dartmouth.edu>"
 ]
-name = "trapi_model"
 packages = [
   {include = "trapi_model"}
 ]
@@ -27,7 +28,6 @@ chp-utils = {git = "https://github.com/di2ag/chp_utils.git"}
 commitizen = "2.28.0"
 pre-commit = "2.19.0"
 pylama = "8.3.8"
-black = "22.6.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
