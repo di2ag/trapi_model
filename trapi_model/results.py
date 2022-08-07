@@ -96,13 +96,17 @@ class Results(TrapiBaseClass):
 
     def add_result(self, node_bindings, edge_bindings):
         result = Result(self.trapi_version, self.biolink_version)
-        conflate_term = None
-        if 'query_id' in node_bindings:
-            conflate_term = node_bindings['query_id']
+        #conflate_term = None
+        #if 'query_id' in node_bindings:
+        #    conflate_term = node_bindings['query_id']
         for qg_id, kg_ids in node_bindings.items():
-            if qg_id != 'query_id':
-                for kg_id in kg_ids:
+            if isinstance(kg_ids, dict):
+                conflate_term = kg_ids['query_id']
+                for kg_id in kg_ids['ids']:
                     result.add_node_binding(qg_id, kg_id, conflate_term = conflate_term)
+            elif isinstance(kg_ids, list):
+                for kg_id in kg_ids:
+                    result.add_node_binding(qg_id, kg_id)
         for qg_id, kg_ids in edge_bindings.items():
             for kg_id in kg_ids:
                 result.add_edge_binding(qg_id, kg_id)
