@@ -113,15 +113,27 @@ class Message(TrapiBaseClass):
         if res is not None:
             for result in res.results:
                 # Process node bindings
+                new_node_bindings_conflate = dict()
                 new_node_bindings = defaultdict(list)
                 for qg_id, node_bindings in result.node_bindings.items():
-                    new_kg_ids = [_map[binding.id] for binding in node_bindings]
-                    new_node_bindings[qg_id].extend(new_kg_ids)
+                    for binding in node_bindings:
+                        new_kg_id = _map[binding.id]
+                        conflate_term = binding.conflate_term
+                        new_node_bindings[qg_id].append(new_kg_id)
+                        if conflate_term is not None:
+                            new_node_bindings_conflate[qg_id] = conflate_term
+                new_node_bindings_with_conflate = dict()
+                for qg_id, new_kg_ids in new_node_bindings.items():
+                    if qg_id in new_node_bindings_conflate:
+                        new_node_bindings_with_conflate.update({qg_id: {'ids': new_kg_ids,
+                                                                        'query_id': new_node_bindings_conflate[qg_id]}})
+                    else:
+                        new_node_bindings_with_conflate.update({qg_id: new_kg_ids})
                 new_edge_bindings = defaultdict(list)
                 for qg_id, edge_bindings in result.edge_bindings.items():
                     new_kg_ids = [_map[binding.id] for binding in edge_bindings]
                     new_edge_bindings[qg_id].extend(new_kg_ids)
                 self.results.add_result(
-                        new_node_bindings,
+                        new_node_bindings_with_conflate,
                         new_edge_bindings,
                         )
