@@ -100,6 +100,7 @@ class Results(TrapiBaseClass):
         #if 'query_id' in node_bindings:
         #    conflate_term = node_bindings['query_id']
         for qg_id, kg_ids in node_bindings.items():
+            print(kg_ids)
             if isinstance(kg_ids, dict):
                 conflate_term = kg_ids['query_id']
                 for kg_id in kg_ids['ids']:

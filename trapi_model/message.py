@@ -129,6 +129,7 @@ class Message(TrapiBaseClass):
                                                                         'query_id': new_node_bindings_conflate[qg_id]}})
                     else:
                         new_node_bindings_with_conflate.update({qg_id: new_kg_ids})
+                print(new_node_bindings_with_conflate)
                 new_edge_bindings = defaultdict(list)
                 for qg_id, edge_bindings in result.edge_bindings.items():
                     new_kg_ids = [_map[binding.id] for binding in edge_bindings]
