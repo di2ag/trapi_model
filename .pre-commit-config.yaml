@@ -1,0 +1,20 @@
+repos:
+  # activate commitizen prompt for semantic versioning
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v2.31.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+  # pip-tools automation
+  - repo: https://github.com/jazzband/pip-tools
+    rev: 6.8.0
+    hooks:
+      # automate compiling project dependencies
+      - id: pip-compile
+        name: pip-compile requirements.in
+        files: ^requirements/production\.(in|txt)$
+      # automate compiling developer tool dependencies
+      - id: pip-compile
+        name: pip-compile requirements-dev.in
+        args: [requirements-dev.in]
+        files: ^requirements-dev\.(in|txt)$

@@ -1,1 +1,0 @@
-git+git://github.com/di2ag/reasoner-validator@production#egg=reasoner-validator

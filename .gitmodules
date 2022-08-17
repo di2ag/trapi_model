@@ -1,9 +1,0 @@
-[submodule "submodules/reasoner-validator"]
-	path = submodules/reasoner-validator
-	url = https://github.com/di2ag/reasoner-validator.git
-[submodule "submodules/biolink-model-toolkit"]
-	path = submodules/biolink-model-toolkit
-	url = https://github.com/biolink/biolink-model-toolkit.git
-[submodule "submodules/ncats_testing"]
-	path = submodules/ncats_testing
-	url = https://github.com/NCATSTranslator/testing.git

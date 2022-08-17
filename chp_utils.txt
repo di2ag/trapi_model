@@ -1,0 +1,1 @@
+-e git+https://github.com/di2ag/chp_utils.git@1.0.0#egg=chp_utils

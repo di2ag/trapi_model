@@ -1,0 +1,5 @@
+jsonschema<=3.2.0,<4.0.0
+bmt==0.7.4
+deepdiff<=5.8.1,<6.0.0
+# CHP Reasoner Validator
+-e git+https://github.com/di2ag/reasoner-validator.git@1.0.2#egg=reasoner-validator
