@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta:__legacy__"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "1.0.0"
+version = "1.0.1"
 version_files = [
     "trapi_model/__version__.py:__version__",
 ]
