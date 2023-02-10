@@ -93,9 +93,16 @@ class BiolinkEntity:
                     return 'biolink:' + self.passed_name.replace(' ', '_')
                 return 'biolink:' + ''.join(x for x in self.passed_name.title() if not x.isspace())
         if self.is_predicate or hasattr(self.element, 'slot_uri'):
-            return self.element.slot_uri
+            #return self.element.slot_uri
+            name = self.element.name.split(' ')
+            name = 'biolink:' + '_'.join(name)
+            return name
         else:
-            return self.element.class_uri
+            #return self.element.class_uri
+            name = self.element.name.split(' ')
+            name = [n.capitalize() for n in name]
+            name = 'biolink:'+ ''.join(name)
+            return name
 
     def get_ancestors(self):
         if BIOLINK_DEBUG:

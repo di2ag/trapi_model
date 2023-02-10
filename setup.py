@@ -31,7 +31,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'jsonschema',
-        'bmt==0.7.4',
+        'bmt',
         'deepdiff',
     ],
     zip_safe=False,
