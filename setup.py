@@ -33,6 +33,7 @@ setup(
         'jsonschema',
         'bmt',
         'deepdiff',
+        'reasoner_validator'
     ],
     zip_safe=False,
     python_requires='>=3.6',
