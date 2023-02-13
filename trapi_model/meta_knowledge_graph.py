@@ -8,7 +8,7 @@ from trapi_model.biolink.constants import get_biolink_entity
 from trapi_model.exceptions import *
 
 #from reasoner_validator import validate
-from reasoner_validator import TrapiSchemaValidator
+from reasoner_validator import TRAPISchemaValidator
 
 def merge_meta_knowledge_graphs(list_of_meta_kgs):
     if len(list_of_meta_kgs) == 1:
