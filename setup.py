@@ -30,10 +30,11 @@ setup(
         },
     include_package_data=True,
     install_requires=[
+        'linkml==1.4.1',
         'jsonschema',
-        'bmt==0.10.0',
+        'bmt',
         'deepdiff',
-        'reasoner_validator==3.3.1'
+        'reasoner_validator'
     ],
     zip_safe=False,
     python_requires='>=3.6',
