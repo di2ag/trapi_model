@@ -1,4 +1,4 @@
 jsonschema
-bmt
+bmt==0.10.0
 deepdiff
-reasoner_validator
+reasoner_validator==3.3.1

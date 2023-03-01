@@ -31,9 +31,9 @@ setup(
     include_package_data=True,
     install_requires=[
         'jsonschema',
-        'bmt',
+        'bmt==0.10.0',
         'deepdiff',
-        'reasoner_validator'
+        'reasoner_validator==3.3.1'
     ],
     zip_safe=False,
     python_requires='>=3.6',
