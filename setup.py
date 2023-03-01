@@ -30,7 +30,7 @@ setup(
         },
     include_package_data=True,
     install_requires=[
-        'linkml==1.4.1',
+        'linkml==1.4.5',
         'jsonschema',
         'bmt',
         'deepdiff',
