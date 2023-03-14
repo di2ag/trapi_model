@@ -9,7 +9,8 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 from requests import request
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 import logging
 # Setup logging
@@ -187,8 +188,10 @@ class QNode(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'QNode', self.trapi_version)
+            #validate(_dict, 'QNode', self.trapi_version)
+            tsv.validate(_dict, 'QNode')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -308,8 +311,10 @@ class QEdge(TrapiBaseClass):
         
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'QEdge', self.trapi_version)
+            #validate(_dict, 'QEdge', self.trapi_version)
+            tsv.validate(_dict, 'QEdge')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -461,8 +466,10 @@ class QueryGraph(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'QueryGraph', self.trapi_version)
+            #validate(_dict, 'QueryGraph', self.trapi_version)
+            tsv.validate(_dict, 'QueryGraph')
             return True, None 
         except ValidationError as ex:
             return False, ex.message

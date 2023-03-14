@@ -7,7 +7,8 @@ from collections import defaultdict
 from deepdiff import DeepDiff
 
 from chp_utils.generic import dict_replace_value
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 from trapi_model.base import TrapiBaseClass
 from trapi_model.query_graph import QueryGraph
@@ -37,8 +38,10 @@ class Message(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'Message', self.trapi_version)
+            #validate(_dict, 'Message', self.trapi_version)
+            tsv.validate(_dict, 'Message')
             return True, None 
         except ValidationError as ex:
             return False, ex.message

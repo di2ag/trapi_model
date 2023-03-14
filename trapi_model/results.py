@@ -12,7 +12,8 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 
 class Result(TrapiBaseClass):
@@ -83,8 +84,10 @@ class Result(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'Result', self.trapi_version)
+            #validate(_dict, 'Result', self.trapi_version)
+            tsv.validate(_dict, 'Result')
             return True, None 
         except ValidationError as ex:
             return False, ex.message

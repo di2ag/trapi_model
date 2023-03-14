@@ -7,7 +7,8 @@ from trapi_model.base import TrapiBaseClass
 from trapi_model.biolink.constants import get_biolink_entity
 from trapi_model.exceptions import *
 
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 def merge_meta_knowledge_graphs(list_of_meta_kgs):
     if len(list_of_meta_kgs) == 1:
@@ -62,8 +63,10 @@ class MetaNode(TrapiBaseClass):
     
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'MetaNode', self.trapi_version)
+            #validate(_dict, 'MetaNode', self.trapi_version)
+            tsv.validate(_dict, 'MetaNode')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -117,8 +120,10 @@ class MetaEdge(TrapiBaseClass):
     
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'MetaEdge', self.trapi_version)
+            #validate(_dict, 'MetaEdge', self.trapi_version)
+            tsv.validate(_dict, 'MetaEdge')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -191,8 +196,10 @@ class MetaKnowledgeGraph(TrapiBaseClass):
     
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'MetaKnowledgeGraph', self.trapi_version)
+            #validate(_dict, 'MetaKnowledgeGraph', self.trapi_version)
+            tsv.validate(_dict, 'MetaKnowledgeGraph')
             return True, None 
         except ValidationError as ex:
             return False, ex.message

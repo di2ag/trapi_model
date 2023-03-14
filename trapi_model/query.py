@@ -6,7 +6,8 @@ import copy
 import itertools
 from collections import defaultdict
 
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 from trapi_model.base import TrapiBaseClass
 from trapi_model.message import Message
@@ -67,8 +68,10 @@ class Query(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'Query', self.trapi_version)
+            #validate(_dict, 'Query', self.trapi_version)
+            tsv.validate(_dict, 'Query')
             return True, None 
         except ValidationError as ex:
             return False, ex.message

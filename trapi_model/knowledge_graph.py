@@ -11,7 +11,8 @@ from trapi_model.biolink import BiolinkEntity
 from trapi_model.exceptions import *
 from trapi_model.base import TrapiBaseClass
 
-from reasoner_validator import validate
+#from reasoner_validator import validate
+from reasoner_validator import TRAPISchemaValidator
 
 
 class Attribute(TrapiBaseClass):
@@ -164,8 +165,10 @@ class KNode(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'Node', self.trapi_version)
+            #validate(_dict, 'Node', self.trapi_version)
+            tsv.validate(_dict, 'Node')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -265,8 +268,10 @@ class KEdge(TrapiBaseClass):
         
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'Edge', self.trapi_version)
+            #validate(_dict, 'Edge', self.trapi_version)
+            tsv.validate(_dict, 'Edge')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
@@ -371,8 +376,10 @@ class KnowledgeGraph(TrapiBaseClass):
 
     def validate(self):
         _dict = self.to_dict()
+        tsv = TRAPISchemaValidator(self.trapi_version)
         try:
-            validate(_dict, 'KnowledgeGraph', self.trapi_version)
+            #validate(_dict, 'KnowledgeGraph', self.trapi_version)
+            tsv.validate(_dict, 'KnowledgeGraph')
             return True, None 
         except ValidationError as ex:
             return False, ex.message
