@@ -29,6 +29,7 @@ class Message(TrapiBaseClass):
                 "query_graph": self.query_graph.to_dict(),
                 "knowledge_graph": self.knowledge_graph.to_dict(),
                 "results": self.results.to_dict(),
+                "auxiliary_graphs": [],
                 }
 
     def find_and_replace(self, old_value, new_value):
