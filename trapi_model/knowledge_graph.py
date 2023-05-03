@@ -15,6 +15,45 @@ from trapi_model.base import TrapiBaseClass
 from reasoner_validator import TRAPISchemaValidator
 
 
+class Source(TrapiBaseClass):
+    def __init__(self,
+            trapi_version,
+            biolink_version,
+            resource_id=None,
+            resource_role=None,
+            upstream_source_id=None,
+            source_record_urls=None,
+            description=None,
+            ):
+        self.resource_id = resource_id
+        self.resource_role = resource_role
+        self.upstream_source_id = upstream_source_id
+        self.source_record_urls = source_record_urls
+        self.description = description
+        super().__init__(trapi_version, biolink_version)
+
+    def to_dict(self):
+        return {
+                    "resource_id": self.resource_id,
+                    "resource_role": self.resource_role,
+                    "upstream_resource_ids": self.upstream_source_id,
+                    "source_record_urls": self.source_record_urls,
+                    "description": self.description,
+                    }
+
+    @staticmethod
+    def load(trapi_version, biolink_version, source_info, name=None):
+        source = Source(
+                trapi_version,
+                biolink_version,
+                resource_id=source_info.pop("resource_id"),
+                resource_role=source_info.pop("resource_role"),
+                upstream_source_id=source_info.pop("upstream_resource_ids", None),
+                source_record_urls=source_info.pop("source_record_urls", None),
+                description=source_info.pop("description", None),
+                )
+        return source
+
 class Attribute(TrapiBaseClass):
     def __init__(self,
             trapi_version,
@@ -181,6 +220,7 @@ class KEdge(TrapiBaseClass):
             k_object,
             predicate=None,
             attributes=None,
+            sources=None
             ):
         self.subject = k_subject
         self.object = k_object
@@ -189,6 +229,10 @@ class KEdge(TrapiBaseClass):
             self.attributes = []
         else:
             self.attributes = attributes
+        if sources is None:
+            self.sources = []
+        else:
+            self.sources = sources
         super().__init__(trapi_version, biolink_version)
         
         valid, message = self.validate()
@@ -208,6 +252,10 @@ class KEdge(TrapiBaseClass):
             _dict["attributes"] = []
             for attribute in self.attributes:
                 _dict["attributes"].append(attribute.to_dict())
+        if self.sources is not None:
+            _dict["sources"] = []
+            for source in self.sources:
+                _dict["sources"].append(source.to_dict())
         return _dict
 
     @staticmethod
@@ -222,6 +270,7 @@ class KEdge(TrapiBaseClass):
         if predicate is not None:
             kedge.predicate = get_biolink_entity(predicate)
         attributes = kedge_info.pop("attributes", None)
+        sources = kedge_info.pop("sources", None)
         if attributes is not None:
             for attribute_info in attributes:
                 kedge.attributes.append(
@@ -231,6 +280,15 @@ class KEdge(TrapiBaseClass):
                             attribute_info,
                             )
                         )
+        if sources is not None:
+            for source_info in sources:
+                kedge.sources.append(
+                    Source.load(
+                        trapi_version,
+                        biolink_version,
+                        source_info,
+                        )
+                    )
         valid, message = kedge.validate()
         if valid:
             return kedge
@@ -266,6 +324,32 @@ class KEdge(TrapiBaseClass):
         if not valid:
             raise InvalidTrapiComponent(self.trapi_version, 'QEdge', message)
         
+    def add_source(self,
+            resource_id,
+            resource_role,
+            upstream_source_id=None,
+            source_record_urls=None,
+            description=None,
+            ):
+        if self.sources is None:
+            self.sources = []
+        self.sources.append(
+                Source(
+                    trapi_version=self.trapi_version,
+                    biolink_version=self.biolink_version,
+                    resource_id=resource_id,
+                    resource_role=resource_role,
+                    upstream_source_id=upstream_source_id,
+                    source_record_urls=source_record_urls,
+                    description=description
+                    )
+                )
+        valid, message = self.validate()
+        if not valid:
+            raise InvalidTrapiComponent(self.trapi_version, 'QEdge', message)
+
+
+
     def validate(self):
         _dict = self.to_dict()
         tsv = TRAPISchemaValidator(self.trapi_version)
