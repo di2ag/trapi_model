@@ -29,6 +29,7 @@ class Message(TrapiBaseClass):
                 "query_graph": self.query_graph.to_dict(),
                 "knowledge_graph": self.knowledge_graph.to_dict(),
                 "results": self.results.to_dict(),
+                "auxiliary_graphs": [],
                 }
 
     def find_and_replace(self, old_value, new_value):
@@ -97,6 +98,7 @@ class Message(TrapiBaseClass):
             master_kedge_id = self.knowledge_graph.add_edge(
                     k_object=kedge.object,
                     k_subject=kedge.subject,
+                    sources=kedge.sources,
                     predicate=kedge.predicate,
                     )
             if kedge.attributes is not None:
