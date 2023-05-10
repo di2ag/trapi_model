@@ -218,24 +218,22 @@ class KEdge(TrapiBaseClass):
             biolink_version,
             k_subject,
             k_object,
+            sources,
             predicate=None,
             attributes=None,
-            sources=None
             ):
         self.subject = k_subject
         self.object = k_object
         self.predicate = predicate
+        self.sources = sources
         if attributes is None:
             self.attributes = []
         else:
             self.attributes = attributes
-        if sources is None:
-            self.sources = []
-        else:
-            self.sources = sources
         super().__init__(trapi_version, biolink_version)
         
         valid, message = self.validate()
+
         if not valid:
             raise InvalidTrapiComponent(trapi_version, 'KEdge', message)
 
@@ -323,31 +321,6 @@ class KEdge(TrapiBaseClass):
         valid, message = self.validate()
         if not valid:
             raise InvalidTrapiComponent(self.trapi_version, 'QEdge', message)
-        
-    def add_source(self,
-            resource_id,
-            resource_role,
-            upstream_source_id=None,
-            source_record_urls=None,
-            description=None,
-            ):
-        if self.sources is None:
-            self.sources = []
-        self.sources.append(
-                Source(
-                    trapi_version=self.trapi_version,
-                    biolink_version=self.biolink_version,
-                    resource_id=resource_id,
-                    resource_role=resource_role,
-                    upstream_source_id=upstream_source_id,
-                    source_record_urls=source_record_urls,
-                    description=description
-                    )
-                )
-        valid, message = self.validate()
-        if not valid:
-            raise InvalidTrapiComponent(self.trapi_version, 'QEdge', message)
-
 
 
     def validate(self):
