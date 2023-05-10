@@ -362,7 +362,7 @@ class KnowledgeGraph(TrapiBaseClass):
                 )
         return curie
 
-    def add_edge(self, k_subject, k_object, predicate=None):
+    def add_edge(self, k_subject, k_object, sources, predicate=None):
         # Run predicates through Biolink
         if type(predicate) is not BiolinkEntity:
             predicate = BiolinkEntity(predicate, biolink_version=self.biolink_version)
@@ -373,6 +373,7 @@ class KnowledgeGraph(TrapiBaseClass):
                 biolink_version=self.biolink_version,
                 k_subject=k_subject,
                 k_object=k_object,
+                sources=sources,
                 predicate=predicate,
                 )
         return edge_id
