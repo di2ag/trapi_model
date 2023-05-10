@@ -27,7 +27,7 @@ class Source(TrapiBaseClass):
             ):
         self.resource_id = resource_id
         self.resource_role = resource_role
-        self.upstream_source_id = upstream_source_id
+        self.upstream_source_ids = upstream_source_ids
         self.source_record_urls = source_record_urls
         self.description = description
         super().__init__(trapi_version, biolink_version)
@@ -36,7 +36,7 @@ class Source(TrapiBaseClass):
         return {
                     "resource_id": self.resource_id,
                     "resource_role": self.resource_role,
-                    "upstream_resource_ids": self.upstream_source_id,
+                    "upstream_resource_ids": self.upstream_source_ids,
                     "source_record_urls": self.source_record_urls,
                     "description": self.description,
                     }
