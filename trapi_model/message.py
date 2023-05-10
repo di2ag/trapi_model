@@ -98,6 +98,7 @@ class Message(TrapiBaseClass):
             master_kedge_id = self.knowledge_graph.add_edge(
                     k_object=kedge.object,
                     k_subject=kedge.subject,
+                    sources=kedge.sources,
                     predicate=kedge.predicate,
                     )
             if kedge.attributes is not None:
