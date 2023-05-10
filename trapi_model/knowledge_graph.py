@@ -21,8 +21,8 @@ class Source(TrapiBaseClass):
             biolink_version,
             resource_id=None,
             resource_role=None,
-            upstream_source_id=None,
-            source_record_urls=None,
+            upstream_source_ids=[],
+            source_record_urls=[],
             description=None,
             ):
         self.resource_id = resource_id
