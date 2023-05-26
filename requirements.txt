@@ -1,5 +1,5 @@
-linkml_runtime==1.4.5
+linkml_runtime
 jsonschema
 bmt
 deepdiff
-reasoner_validator @ git+https://github.com/NCATSTranslator/reasoner-validator@releases/tag/v3.4.19
+reasoner_validator
